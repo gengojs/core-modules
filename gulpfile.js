@@ -3,8 +3,13 @@ var sourcemaps = require("gulp-sourcemaps");
 var babel = require("gulp-babel");
 var dest = require('gulp-dest');
 var mocha  = require('gulp-mocha');
+var jshint = require('gulp-jshint');
+
 gulp.task("lib:entry", function () {
   return gulp.src('./lib/**/**/*.js')
+    .pipe(jshint())
+    .pipe(jshint.reporter('jshint-stylish'))
+    .pipe(jshint.reporter('fail'))
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(sourcemaps.write("./source maps/"))

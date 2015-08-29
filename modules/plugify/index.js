@@ -146,7 +146,6 @@ var Plugify = (function () {
     key: 'assert',
     value: function assert(plugin) {
       (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Plugify.name, 'process: assert');
-      'use strict';
       try {
         if (_lodash2['default'].has(plugin, 'main')) throw new Error('Woops! Did you forget the main function?');
         if (_lodash2['default'].has(plugin, 'package')) throw new Error('Woops! Did you forget the package?');
