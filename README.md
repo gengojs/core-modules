@@ -11,13 +11,14 @@ gengo.js core modules is a set of modules that helps the core to function proper
 This module returns the phrase and the extracted arguments
 as an API for the parser plugin.
 
-#### API
-
 `@example`
 
 ```javascript
 import { inputify } from 'gengojs-modules'
 ```
+
+
+#### API
 
 ##### `phrase()`
 
@@ -56,6 +57,12 @@ var values = other.values();
 
 This module reads or sets the initial options.
 
+`@example`
+
+```javascript
+import { optify } from 'gengojs-modules'
+```
+
 #### Supported Extensions
 
 The supported extensions are:
@@ -67,10 +74,22 @@ The supported extensions are:
 
 This module initializes the plugins.
 
+`@example`
+
+```javascript
+import { plugify } from 'gengojs-modules'
+```
+
 ### Servify
 
 This module detects the server and applies the API to the
 request and response objects
+
+`@example`
+
+```javascript
+import { servify } from 'gengojs-modules'
+```
 
 ## Develop
 
