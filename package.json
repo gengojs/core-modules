@@ -1,6 +1,6 @@
 {
   "name": "gengojs-core-modules",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "gengo.js core modules is a set of modules that helps the core to function properly.",
   "main": "./modules/index.js",
   "scripts": {

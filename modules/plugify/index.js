@@ -26,54 +26,12 @@ var Plugify = (function () {
     _classCallCheck(this, Plugify);
 
     (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Plugify.name, 'process: constructor');
+    // Type stack to keep track which type has been plugged in
+    this.types = ['api', 'backend', 'parser', 'header', 'localize', 'router'];
     // Initialize the plugin
     this.plugins = this.init();
-    var plugs = this.plugs(plugins);
-    // Register and then restrict the
-    // plugins to one plugin per type
-    // and add defaults if none exist
-    _lodash2['default'].forEach(plugs, function (plugin) {
-      // Assert
-      this.assert(plugin);
-      var type = this.normalize(plugin['package'].type);
-      // If the default plugin already exists
-      // then remove the default and replace it with
-      // the user defined plugin
-      if (this.plugins[type].length === 1) {
-        if (!_lodash2['default'].isUndefined(defaults)) this.plugins[type].pop();
-        // Set the plugin attributes
-        this.setAttributes(plugin, options);
-        // If there are multiple plugins of the same type
-        // restrict it to one plugin
-      } else if (this.plugins[type].length > 1) {
-          var length = this.plugins[type].length - 1;
-          while (length !== 0) {
-            if (!_lodash2['default'].isUndefined(defaults)) this.plugins[type].pop();
-            length--;
-          }
-          // Since no there are no default plugins,
-          // just add the plugin to the stack
-        } else {
-            this.setAttributes(plugin, options);
-          }
-    }, this);
-
-    // Remove the plugin from array
-    // and set it as the root
-    // e.g. this.plugins.backend => array
-    // becomes this.plugins.backend => object
-    plugs = this.plugins;
-    for (var key in plugs) {
-      if (plugs.hasOwnProperty(key)) {
-        var element = plugs[key];
-        if (element[0]) {
-          var type = element[0]['package'].type;
-
-          this.plugins[type] = element[0];
-        }
-      }
-    }
-
+    this.register(plugins, options, defaults);
+    this.bundle();
     _lodash2['default'].forEach(this.plugins, function (value, key) {
       (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Plugify.name, 'plugins: ' + key);
     });
@@ -174,6 +132,85 @@ var Plugify = (function () {
         if (_lodash2['default'].has(plugin, 'defaults')) throw new Error('Woops! Did you forget to add the "defaults"?');
       } catch (error) {
         (0, _gengojsDebug2['default'])('core', 'error', 'class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
+      }
+    }
+
+    /**
+     * @private
+     * 'register' registers the plugins and sets the attributes.
+     */
+  }, {
+    key: 'register',
+    value: function register(plugins, options, defaults) {
+      var plugs = this.plugs(plugins);
+      // Register and then restrict the
+      // plugins to one plugin per type
+      // and add defaults if none exist
+      _lodash2['default'].forEach(plugs, function (plugin) {
+        // Assert
+        this.assert(plugin);
+        var type = this.normalize(plugin['package'].type);
+        // If the default plugin already exists
+        // then remove the default and replace it with
+        // the user defined plugin
+        if (this.plugins[type].length === 1) {
+          if (!_lodash2['default'].isUndefined(defaults)) this.plugins[type].pop();
+          // Set the plugin attributes
+          this.setAttributes(plugin, options);
+          // If there are multiple plugins of the same type
+          // restrict it to one plugin
+        } else if (this.plugins[type].length > 1) {
+            var length = this.plugins[type].length - 1;
+            while (length !== 0) {
+              if (!_lodash2['default'].isUndefined(defaults)) this.plugins[type].pop();
+              length--;
+            }
+            // Since no there are no default plugins,
+            // just add the plugin to the stack
+          } else {
+              this.setAttributes(plugin, options);
+            }
+      }, this);
+    }
+
+    /**
+     * @private
+     * 'bundle' bundles the plugins and transforms the plugin
+     * stack from an array to an object. It also makes sure
+     * that the stack has a fn placeholder to prevent an undefined
+     * object from being used as a function
+     */
+  }, {
+    key: 'bundle',
+    value: function bundle() {
+      // Remove the plugin from array
+      // and set it as the root
+      // e.g. this.plugins.backend => array
+      // becomes this.plugins.backend => object
+      var plugs = this.plugins;
+      for (var key in plugs) {
+        if (plugs.hasOwnProperty(key)) {
+          var element = plugs[key];
+          if (element[0]) {
+            // Get the type
+            var type = element[0]['package'].type;
+
+            // Get the index of the type from the types stack
+            var index = this.types.indexOf(this.normalize(type));
+            // Remove the type from the stack since it is registered
+            if (index > -1) this.types.splice(index, 1);
+            // Register the plugin
+            this.plugins[this.normalize(type)] = element[0];
+          } else {
+            if (!_lodash2['default'].isEmpty(this.types)) {
+              // Get a random type from the stack and
+              // set a placeholder plugin in case it doesn't exist
+              this.plugins[this.normalize(this.types[0])] = function () {};
+              // Remove the type from the stack
+              this.types.pop();
+            }
+          }
+        }
       }
     }
   }]);
