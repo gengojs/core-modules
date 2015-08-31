@@ -25,6 +25,7 @@
     "chai": "^3.2.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
+    "gulp-changelog": "^1.0.0",
     "gulp-dest": "^0.2.2",
     "gulp-jshint": "^1.11.2",
     "gulp-mocha": "^2.1.3",
