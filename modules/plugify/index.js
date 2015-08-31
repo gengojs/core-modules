@@ -57,7 +57,26 @@ var Plugify = (function () {
             this.setAttributes(plugin, options);
           }
     }, this);
-    (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Plugify.name, 'plugins: ' + this.plugins);
+
+    // Remove the plugin from array
+    // and set it as the root
+    // e.g. this.plugins.backend => array
+    // becomes this.plugins.backend => object
+    plugs = this.plugins;
+    for (var key in plugs) {
+      if (plugs.hasOwnProperty(key)) {
+        var element = plugs[key];
+        if (element[0]) {
+          var type = element[0]['package'].type;
+
+          this.plugins[type] = element[0];
+        }
+      }
+    }
+
+    _lodash2['default'].forEach(this.plugins, function (value, key) {
+      (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Plugify.name, 'plugins: ' + key);
+    });
   }
 
   _createClass(Plugify, [{

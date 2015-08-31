@@ -1,6 +1,6 @@
 # gengojs-core-modules
 
-gengo.js core modules is a set of modules that helps the core to function properly.
+[gengo.js](https://www.github.com/iwatakeshi/gengojs) core modules is a set of modules that helps the core to function properly.
 
 [![Build Status](https://travis-ci.org/iwatakeshi/gengojs-core-modules.svg)](https://travis-ci.org/iwatakeshi/gengojs-core-modules)
 
