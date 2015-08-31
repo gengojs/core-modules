@@ -33,7 +33,7 @@ var Plugify = (function () {
     this.register(plugins, options, defaults);
     this.bundle();
     _lodash2['default'].forEach(this.plugins, function (value, key) {
-      (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Plugify.name, 'plugins: ' + key);
+      (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Plugify.name, 'plugins: type - ' + key + ' typeof - ' + typeof value);
     });
   }
 
@@ -183,35 +183,27 @@ var Plugify = (function () {
   }, {
     key: 'bundle',
     value: function bundle() {
+      var _this = this;
+
       // Remove the plugin from array
       // and set it as the root
       // e.g. this.plugins.backend => array
       // becomes this.plugins.backend => object
       var plugs = this.plugins;
-      for (var key in plugs) {
-        if (plugs.hasOwnProperty(key)) {
-          var element = plugs[key];
-          if (element[0]) {
-            // Get the type
-            var type = element[0]['package'].type;
-
-            // Get the index of the type from the types stack
-            var index = this.types.indexOf(this.normalize(type));
-            // Remove the type from the stack since it is registered
-            if (index > -1) this.types.splice(index, 1);
-            // Register the plugin
-            this.plugins[this.normalize(type)] = element[0];
-          } else {
-            if (!_lodash2['default'].isEmpty(this.types)) {
-              // Get a random type from the stack and
-              // set a placeholder plugin in case it doesn't exist
-              this.plugins[this.normalize(this.types[0])] = function () {};
-              // Remove the type from the stack
-              this.types.pop();
-            }
-          }
+      _lodash2['default'].forEach(plugs, function (plugin, type) {
+        if (plugin[0]) {
+          // Get the index of the type from the types stack
+          var index = _this.types.indexOf(_this.normalize(type));
+          // Remove the type from the stack since it is registered
+          if (index > -1) _this.types.splice(index, 1);
+          // Register the plugin
+          _this.plugins[_this.normalize(type)] = plugin[0];
         }
-      }
+      });
+      // Set the placeholder
+      _lodash2['default'].forEach(this.types, function (type) {
+        _this.plugins[_this.normalize(type)] = function () {};
+      });
     }
   }]);
 
