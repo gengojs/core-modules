@@ -34,7 +34,7 @@ var Extractify = (function () {
         args = [],
         value,
         length = array ? array.length : 0;
-    (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'array: ' + array, 'length: ' + length);
+    (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'array: ' + JSON.stringify(array), 'length: ' + length);
     // If the arguments is greater than 2 (because of offset)
     if (length > 1) {
       // Just append them to the array
@@ -90,7 +90,7 @@ var Inputify = (function () {
     this._extract = new Extractify(phrase, args);
     this._phrase = this._extract.phrase;
     this._args = args;
-    (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Inputify.name, 'extract: ' + this._extract, 'phrase: ' + this._phrase, 'args: ' + this._args);
+    (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Inputify.name, '\n\textract: ' + JSON.stringify(this._extract), '\n\tphrase: ' + this._phrase, '\n\targs: ' + JSON.stringify(this._args));
   }
 
   /**
