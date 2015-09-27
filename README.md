@@ -1,4 +1,4 @@
-# gengojs-core-modules
+# gengo.js/core-modules
 
 [gengo.js](https://www.github.com/gengojs/gengojs) core modules 
 is a set of modules that helps the [core](https://www.github.com/gengojs/core-modules) to function properly.
@@ -15,7 +15,7 @@ as an API for the parser plugin.
 `@example`
 
 ```javascript
-import { inputify } from 'gengojs-modules'
+import { inputify } from 'gengojs-core-modules'
 ```
 
 
