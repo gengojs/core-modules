@@ -61,7 +61,7 @@ This module reads or sets the initial options.
 `@example`
 
 ```javascript
-import { optify } from 'gengojs-modules'
+import { optify } from 'gengojs-core-modules'
 ```
 
 #### Supported Extensions
