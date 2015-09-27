@@ -78,7 +78,7 @@ This module initializes the plugins.
 `@example`
 
 ```javascript
-import { plugify } from 'gengojs-modules'
+import { plugify } from 'gengojs-core-modules'
 ```
 
 ### Servify
@@ -89,7 +89,7 @@ request and response objects
 `@example`
 
 ```javascript
-import { servify } from 'gengojs-modules'
+import { servify } from 'gengojs-core-modules'
 ```
 
 ## Develop
