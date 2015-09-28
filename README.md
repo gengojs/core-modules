@@ -5,6 +5,13 @@ is a set of modules that helps the [core](https://www.github.com/gengojs/core-mo
 
 [![Build Status](https://travis-ci.org/gengojs/core-modules.svg)](https://travis-ci.org/gengojs/core-modules)
 
+## Usage
+
+```bash
+$ npm install --save gengojs-core-modules
+```
+
+
 ## Classes
 
 ### Inputify
