@@ -216,4 +216,4 @@ exports['default'] = function (plugins, options, defaults) {
 };
 
 module.exports = exports['default'];
-//# sourceMappingURL=../../source maps/modules/plugify/index.js.map
+//# sourceMappingURL=../source maps/modules/plugify.js.map

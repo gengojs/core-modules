@@ -77,4 +77,4 @@ exports['default'] = function (options) {
 };
 
 module.exports = exports['default'];
-//# sourceMappingURL=../../source maps/modules/optify/index.js.map
+//# sourceMappingURL=../source maps/modules/optify.js.map

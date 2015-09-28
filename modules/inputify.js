@@ -164,4 +164,4 @@ exports['default'] = function (phrase) {
 };
 
 module.exports = exports['default'];
-//# sourceMappingURL=../../source maps/modules/inputify/index.js.map
+//# sourceMappingURL=../source maps/modules/inputify.js.map

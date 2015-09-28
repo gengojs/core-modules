@@ -94,4 +94,4 @@ exports['default'] = function (_this) {
 };
 
 module.exports = exports['default'];
-//# sourceMappingURL=../../source maps/modules/servify/index.js.map
+//# sourceMappingURL=../source maps/modules/servify.js.map
