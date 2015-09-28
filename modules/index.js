@@ -1,3 +1,6 @@
+/**
+ * This module exports all classes 
+ */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -22,8 +25,12 @@ var _servify = require('./servify');
 
 var _servify2 = _interopRequireDefault(_servify);
 
+var _extractify = require('./extractify');
+
+var _extractify2 = _interopRequireDefault(_extractify);
+
 exports['default'] = {
-  inputify: _inputify2['default'], optify: _optify2['default'], plugify: _plugify2['default'], servify: _servify2['default']
+  inputify: _inputify2['default'], optify: _optify2['default'], plugify: _plugify2['default'], servify: _servify2['default'], extractify: _extractify2['default']
 };
 module.exports = exports['default'];
 //# sourceMappingURL=../source maps/modules/index.js.map

@@ -26,7 +26,7 @@
   "bugs": {
     "url": "https://github.com/gengojs/gengojs-core-modules/issues"
   },
-  "homepage": "https://github.com/gengojs/gengojs-core-modules#readme",
+  "homepage": "https://github.com/gengojs/gengojs-core-modules",
   "devDependencies": {
     "app-root-path": "^1.0.0",
     "chai": "^3.2.0",

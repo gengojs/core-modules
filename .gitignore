@@ -29,5 +29,5 @@ node_modules
 # Visual Studio Code Configurations
 jsconfig.json
 .settings/
-.bakcup/
+.backup/
 .publish/

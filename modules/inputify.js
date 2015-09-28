@@ -9,9 +9,13 @@ Object.defineProperty(exports, '__esModule', {
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; desc = parent = getter = undefined; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 var _gengojsDebug = require('gengojs-debug');
 
@@ -21,80 +25,29 @@ var _lodash = require('lodash');
 
 var _lodash2 = _interopRequireDefault(_lodash);
 
+var _extractify = require('./extractify');
+
+var _extractify2 = _interopRequireDefault(_extractify);
+
 /**
- * Extractify
+ * This class extends the Extractify class
+ * by adding an API wrapper around it.
+ * @class
  */
 
-var Extractify = (function () {
-  function Extractify(phrase, array) {
-    _classCallCheck(this, Extractify);
+var Inputify = (function (_Extractify) {
+  _inherits(Inputify, _Extractify);
 
-    (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'process: constructor');
-    var values = {},
-        args = [],
-        value,
-        length = array ? array.length : 0;
-    (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'array: ' + JSON.stringify(array), 'length: ' + length);
-    // If the arguments is greater than 2 (because of offset)
-    if (length > 1) {
-      // Just append them to the array
-      array.forEach(function (item) {
-        return args.push(item);
-      });
-    }
-    // If they are exactly 2 argument
-    else if (length === 1) {
-        // Get the first value
-        value = array[0];
-        // Set arguments [...]
-        if (_lodash2['default'].isArray(value)) args = value;else if (_lodash2['default'].isPlainObject(value)) args = [];else args.push(value);
-        // Set values {...}
-        values = _lodash2['default'].isPlainObject(value) ? value : {};
-      }
-    // If called like __({phrase:'hello', locale:'en'})
-    if (_lodash2['default'].isPlainObject(phrase) && !_lodash2['default'].isEmpty(values)) {
-      if (_lodash2['default'].has(phrase, 'locale')) values.locale = phrase.locale;
-      if (_lodash2['default'].has(phrase, 'phrase')) phrase = phrase.phrase;
-    }
-    this.phrase = phrase;
-    this.values = values;
-    this.args = args;
-  }
-
-  /**
-   * Inputify
-   */
-
-  _createClass(Extractify, [{
-    key: 'hasValues',
-    value: function hasValues() {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'process: hasValues');
-      return !_lodash2['default'].isEmpty(this.values);
-    }
-  }, {
-    key: 'hasArgs',
-    value: function hasArgs() {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'process: hasArgs');
-      return !_lodash2['default'].isEmpty(this.args);
-    }
-  }]);
-
-  return Extractify;
-})();
-
-var Inputify = (function () {
   function Inputify(phrase, args) {
     _classCallCheck(this, Inputify);
 
+    _get(Object.getPrototypeOf(Inputify.prototype), 'constructor', this).call(this, phrase, args);
     (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: constructor');
-    this._extract = new Extractify(phrase, args);
-    this._phrase = this._extract.phrase;
-    this._args = args;
-    (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Inputify.name, '\n\textract: ' + JSON.stringify(this._extract), '\n\tphrase: ' + this._phrase, '\n\targs: ' + JSON.stringify(this._args));
+    (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Inputify.name, '\n\textract: ' + JSON.stringify(this.extracts), '\n\tphrase: ' + this.phrase(), '\n\targs: ' + JSON.stringify(this.arguments()));
   }
 
   /**
-   * phrase
+   * Returns the extracted phrase.
    * @return {string} - The phrase to internationalize.
    */
 
@@ -102,56 +55,56 @@ var Inputify = (function () {
     key: 'phrase',
     value: function phrase() {
       (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: phrase');
-      return this._phrase;
+      return this.extracts.phrase;
     }
 
     /**
-     * arguments
-     * @return {Array} - The original arguments before extraction.
+     * Returns the extracted arguments.
+     * @return {Array} - The extracted arguments
      */
   }, {
     key: 'arguments',
     value: function _arguments() {
       (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: arguments');
-      return this._args;
+      return this.extracts.args;
     }
 
     /**
-     * other
-     * @return {object} - The other arguments after extraction in
-     * the form of an API.
-     * @example
-     * new Inputify(phrase, args).other().arguments();
-     * new Inputify(phrase, args).other().values();
-     * new Inputify(phrase, args).other().hasArgs();
-     * new Inputfiy(phrase, args).other().hasValues();
+     * Returns the extracted values.
+     * @return {Object} - The extracted values (plain object)
      */
   }, {
-    key: 'other',
-    value: function other() {
-      var _this = this;
+    key: 'values',
+    value: function values() {
+      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: values');
+      return this.extracts.values;
+    }
 
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: other');
-      var args = function args() {
-        return _this._extract.args;
-      };
-      var values = function values() {
-        return _this._extract.values;
-      };
-      var hasArgs = function hasArgs() {
-        return _this._extract.hasArgs();
-      };
-      var hasValues = function hasValues() {
-        return _this._extract.hasValues();
-      };
-      return {
-        args: args, values: values, hasArgs: hasArgs, hasValues: hasValues
-      };
+    /**
+     * Determines whether the arguments are empty.
+     * @return {boolean} True if the object is empty 
+     */
+  }, {
+    key: 'hasArgs',
+    value: function hasArgs() {
+      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: hasArgs');
+      return !_lodash2['default'].isEmpty(this.extracts.args);
+    }
+
+    /**
+     * Determines whether the values are empty.
+     * @return {boolean} True if the object is empty 
+     */
+  }, {
+    key: 'hasValues',
+    value: function hasValues() {
+      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: hasValues');
+      return !_lodash2['default'].isEmpty(this.extracts.values);
     }
   }]);
 
   return Inputify;
-})();
+})(_extractify2['default']);
 
 exports['default'] = function (phrase) {
   'use strict';

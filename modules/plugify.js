@@ -137,7 +137,7 @@ var Plugify = (function () {
 
     /**
      * @private
-     * 'register' registers the plugins and sets the attributes.
+     * registers the plugins and sets the attributes.
      */
   }, {
     key: 'register',
@@ -175,7 +175,7 @@ var Plugify = (function () {
 
     /**
      * @private
-     * 'bundle' bundles the plugins and transforms the plugin
+     * Bundles the plugins and transforms the plugin
      * stack from an array to an object. It also makes sure
      * that the stack has a fn placeholder to prevent an undefined
      * object from being used as a function

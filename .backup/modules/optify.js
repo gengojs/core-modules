@@ -7,13 +7,16 @@ import fs from 'fs';
 import yaml from 'js-yaml';
 import debug from 'gengojs-debug';
 /*
-    Definition: Options must be either a string or a plain object.
+    ## Options
+    
+    **Definition**: 
 
-    1. Options must be an object that specifies the type 
-       such as 'parser' or options must be a string that specifies 
+    1. Options must be a string that specifies 
        the path to the options file.
+    2. Options must be an object that specifies the type 
+       such as 'parser' followed by additional options for
+       that type.
        
-
     Side note: Every plugin created must offer default options and must 
     be responsible with letting the developers know about the options
     for your plugin (through GitHub, etc).
