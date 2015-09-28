@@ -13,25 +13,28 @@
   <body>
     <section class="page-header">
       <h1 class="project-name">gengo.js/core/modules</h1>
-      <h2 class="project-tagline">gengo.js core modules is a set of modules that helps the core to function properly.</h2><a href="https://github.com/gengojs/gengojs-core-modules#readme" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/gengojs-core-modules" target="_blank" class="btn">View on npm</a>
+      <h2 class="project-tagline">gengo.js core modules is a set of modules that helps the core to function properly.</h2><a href="https://github.com/gengojs/gengojs-core-modules" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/gengojs-core-modules" target="_blank" class="btn">View on npm</a>
     </section>
     <section data-spy="scroll" data-target=".scrollspy" class="main-content">
       <div class="row">
         <div class="col-md-3 col-xs-3 bs-docs-sidebar">
           <ul id="sidebar" class="nav nav-stacked fixed">
             <li><a href="../index.html">Main</a></li>
+            <li><a href="../modules/extractify.js.html">modules/extractify.js</a></li>
             <li><a href="../modules/index.js.html">modules/index.js</a></li>
             <li class="active"><a href="../modules/inputify.js.html">modules/inputify.js
                 <ul class="nav nav-stacked">
-                  <li><a href="#Extractify"><i class="alert alert-success"></i><span>Extractify</span></a>
-                  </li>
                   <li><a href="#Inputify"><i class="alert alert-success"></i><span>Inputify</span></a>
                   </li>
                   <li><a href="#phrase"><i class="alert alert-info"></i><span>phrase</span></a>
                   </li>
                   <li><a href="#arguments"><i class="alert alert-info"></i><span>arguments</span></a>
                   </li>
-                  <li><a href="#other"><i class="alert alert-info"></i><span>other</span></a>
+                  <li><a href="#values"><i class="alert alert-info"></i><span>values</span></a>
+                  </li>
+                  <li><a href="#hasArgs"><i class="alert alert-info"></i><span>hasArgs</span></a>
+                  </li>
+                  <li><a href="#hasValues"><i class="alert alert-info"></i><span>hasValues</span></a>
                   </li>
                 </ul></a></li>
             <li><a href="../modules/optify.js.html">modules/optify.js</a></li>
@@ -42,77 +45,24 @@
         <div class="col-md-9">
           <div class="description"><p>This module extracts the phrase and arguments.</p></div>
           <pre><code class="language-javascript">import debug from 'gengojs-debug';
-import _ from 'lodash';</code></pre>
-          <section id="Extractify">
-            <h1>Extractify</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-success radius ctx-type">class</div><span>&nbsp;</span><span>new Extractify()</span><span>&nbsp;</span>
-            </p>
-          </section>
-          <div class="description"><p>Extractify</p></div>
-          <pre><code class="language-javascript">class Extractify {
-  constructor(phrase, array) {
-    debug('core', 'debug', `class: ${Extractify.name}`, `process: constructor`);
-    var values = {},
-      args = [],
-      value, length = array ? array.length : 0;
-    debug('core', 'debug',
-      `class: ${Extractify.name}`,
-      `array: ${JSON.stringify(array)}`,
-      `length: ${length}`);
-    // If the arguments is greater than 2 (because of offset)
-    if (length &gt; 1) {
-      // Just append them to the array
-      array.forEach(item =&gt; args.push(item));
-    }
-    // If they are exactly 2 argument
-    else if (length === 1) {
-      // Get the first value
-      value = array[0];
-      // Set arguments [...]
-      if (_.isArray(value)) args = value;
-      else if (_.isPlainObject(value)) args = [];
-      else args.push(value);
-      // Set values {...}
-      values = _.isPlainObject(value) ? value : {};
-    }
-    // If called like __({phrase:'hello', locale:'en'})
-    if (_.isPlainObject(phrase) &amp;&amp; !_.isEmpty(values)) {
-      if (_.has(phrase, 'locale')) values.locale = phrase.locale;
-      if (_.has(phrase, 'phrase')) phrase = phrase.phrase;
-    }
-    this.phrase = phrase;
-    this.values = values;
-    this.args = args;
-  }
-  hasValues() {
-    debug('core', 'debug', `class: ${Extractify.name}`, `process: hasValues`);
-    return !_.isEmpty(this.values);
-  }
-  hasArgs() {
-    debug('core', 'debug', `class: ${Extractify.name}`, `process: hasArgs`);
-    return !_.isEmpty(this.args);
-  }
-}</code></pre>
+import _ from 'lodash';
+import Extractify from './extractify';</code></pre>
           <section id="Inputify">
             <h1>Inputify</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-success radius ctx-type">class</div><span>&nbsp;</span><span>new Inputify()</span><span>&nbsp;</span>
+              <div class="label label-success radius ctx-type">class</div><span>&nbsp;</span><span>new Inputify()</span><span>&nbsp;</span><span>&nbsp;</span><span class="label label-default">extends</span><span>&nbsp;</span><span>Extractify</span>
             </p>
           </section>
-          <div class="description"><p>Inputify</p></div>
-          <pre><code class="language-javascript">class Inputify {
+          <div class="description"><p>This class extends the Extractify class<br />by adding an API wrapper around it.</p></div>
+          <pre><code class="language-javascript">class Inputify extends Extractify {
   constructor(phrase, args) {
+      super(phrase, args);
       debug('core', 'debug', `class: ${Inputify.name}`, `process: constructor`);
-      this._extract = new Extractify(phrase, args);
-      this._phrase = this._extract.phrase;
-      this._args = args;
       debug('core', 'info', `class: ${Inputify.name}`,
-        `\n\textract: ${JSON.stringify(this._extract)}`,
-        `\n\tphrase: ${this._phrase}`,
-        `\n\targs: ${JSON.stringify(this._args)}`);
+        `\n\textract: ${JSON.stringify(this.extracts)}`,
+        `\n\tphrase: ${this.phrase()}`,
+        `\n\targs: ${JSON.stringify(this.arguments())}`);
     }</code></pre>
           <section id="phrase">
             <h1>phrase</h1>
@@ -121,10 +71,10 @@ import _ from 'lodash';</code></pre>
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.phrase()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>phrase</p></div>
+          <div class="description"><p>Returns the extracted phrase.</p></div>
           <pre><code class="language-javascript">phrase() {
     debug('core', 'debug', `class: ${Inputify.name}`, `process: phrase`);
-    return this._phrase;
+    return this.extracts.phrase;
   }</code></pre>
           <section id="arguments">
             <h1>arguments</h1>
@@ -133,37 +83,48 @@ import _ from 'lodash';</code></pre>
               <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.arguments()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>arguments</p></div>
+          <div class="description"><p>Returns the extracted arguments.</p></div>
           <pre><code class="language-javascript">arguments() {
     debug('core', 'debug', `class: ${Inputify.name}`, `process: arguments`);
-    return this._args;
+    return this.extracts.args;
   }</code></pre>
-          <section id="other">
-            <h1>other</h1>
+          <section id="values">
+            <h1>values</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.other()</span><span>&nbsp;</span>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.values()</span><span>&nbsp;</span>
             </p>
           </section>
-          <div class="description"><p>other</p></div>
-          <pre><code class="language-javascript">other() {
-  debug('core', 'debug', `class: ${Inputify.name}`, `process: other`);
-  let args = () =&gt; {
-    return this._extract.args;
-  };
-  let values = () =&gt; {
-    return this._extract.values;
-  };
-  let hasArgs = () =&gt; {
-    return this._extract.hasArgs();
-  };
-  let hasValues = () =&gt; {
-    return this._extract.hasValues();
-  };
-  return {
-    args, values, hasArgs, hasValues
-  };
+          <div class="description"><p>Returns the extracted values.</p></div>
+          <pre><code class="language-javascript">values() {
+  debug('core', 'debug', `class: ${Inputify.name}`, `process: values`);
+  return this.extracts.values;
+}</code></pre>
+          <section id="hasArgs">
+            <h1>hasArgs</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.hasArgs()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>Determines whether the arguments are empty.</p></div>
+          <pre><code class="language-javascript">hasArgs() {
+    debug('core', 'debug', `class: ${Inputify.name}`, `process: hasArgs`);
+    return !_.isEmpty(this.extracts.args);
+  }</code></pre>
+          <section id="hasValues">
+            <h1>hasValues</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.hasValues()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>Determines whether the values are empty.</p></div>
+          <pre><code class="language-javascript">hasValues() {
+  debug('core', 'debug', `class: ${Inputify.name}`, `process: hasValues`);
+  return !_.isEmpty(this.extracts.values);
 }
+
 }
 
 export default (phrase, ...args) =&gt; {
