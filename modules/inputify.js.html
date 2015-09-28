@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>gengo.js/core/modules</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.3/normalize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" type="text/css">
+    <link rel="stylesheet" href="../css/bootstrap.css">
+    <link rel="stylesheet" href="../css/cayman.css">
+    <link rel="stylesheet" href="../css/prism.css">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">gengo.js/core/modules</h1>
+      <h2 class="project-tagline">gengo.js core modules is a set of modules that helps the core to function properly.</h2><a href="https://github.com/gengojs/gengojs-core-modules" target="_blank" class="btn">View on GitHub</a><a href="https://npmjs.com/package/gengojs-core-modules" target="_blank" class="btn">View on npm</a>
+    </section>
+    <section data-spy="scroll" data-target=".scrollspy" class="main-content">
+      <div class="row">
+        <div class="col-md-3 col-xs-3 bs-docs-sidebar">
+          <ul id="sidebar" class="nav nav-stacked fixed">
+            <li><a href="../index.html">Main</a></li>
+            <li><a href="../modules/extractify.js.html">modules/extractify.js</a></li>
+            <li><a href="../modules/index.js.html">modules/index.js</a></li>
+            <li class="active"><a href="../modules/inputify.js.html">modules/inputify.js
+                <ul class="nav nav-stacked">
+                  <li><a href="#Inputify"><i class="alert alert-success"></i><span>Inputify</span></a>
+                  </li>
+                  <li><a href="#phrase"><i class="alert alert-info"></i><span>phrase</span></a>
+                  </li>
+                  <li><a href="#arguments"><i class="alert alert-info"></i><span>arguments</span></a>
+                  </li>
+                  <li><a href="#values"><i class="alert alert-info"></i><span>values</span></a>
+                  </li>
+                  <li><a href="#hasArgs"><i class="alert alert-info"></i><span>hasArgs</span></a>
+                  </li>
+                  <li><a href="#hasValues"><i class="alert alert-info"></i><span>hasValues</span></a>
+                  </li>
+                  <li><a href="#inputify"><i class="alert alert-info"></i><span>inputify</span></a>
+                  </li>
+                </ul></a></li>
+            <li><a href="../modules/optify.js.html">modules/optify.js</a></li>
+            <li><a href="../modules/plugify.js.html">modules/plugify.js</a></li>
+            <li><a href="../modules/servify.js.html">modules/servify.js</a></li>
+          </ul>
+        </div>
+        <div class="col-md-9">
+          <div class="description"><h2>Input</h2>
+<p><em>Definition*</em>: </p><pre><code>1. The first argument must be a string or an object.
+</code></pre><p>The string is the phrase to i18n<br />The object must contain a &#39;phrase&#39; key with a string value to i18n</p><pre><code>2. The second must be n number of strings, an array or an object.
+</code></pre><p>The n number of strings will represent sprint-f<br />The array will represent sprint-f<br />The object will represent sprint-f, or other arguments</p></div>
+          <section id="Inputify">
+            <h1>Inputify</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-success radius ctx-type">class</div><span>&nbsp;</span><span>new Inputify()</span><span>&nbsp;</span><span>&nbsp;</span><span class="label label-default">extends</span><span>&nbsp;</span><span>Extractify</span>
+            </p>
+          </section>
+          <div class="description"><p>This class extends the Extractify class<br />by adding an API wrapper around it.</p></div>
+          <pre><code class="language-javascript">class Inputify extends Extractify {
+  constructor(phrase, args) {
+      super(phrase, args);
+      debug('core', 'debug', `class: ${Inputify.name}`, `process: constructor`);
+      debug('core', 'info', `class: ${Inputify.name}`,
+        `\n\textract: ${JSON.stringify(this.extracts)}`,
+        `\n\tphrase: ${this.phrase()}`,
+        `\n\targs: ${JSON.stringify(this.arguments())}`);
+    }</code></pre>
+          <section id="phrase">
+            <h1>phrase</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.phrase()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>Returns the extracted phrase.</p></div>
+          <pre><code class="language-javascript">phrase() {
+    debug('core', 'debug', `class: ${Inputify.name}`, `process: phrase`);
+    return this.extracts.phrase;
+  }</code></pre>
+          <section id="arguments">
+            <h1>arguments</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.arguments()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>Returns the extracted arguments.</p></div>
+          <pre><code class="language-javascript">arguments() {
+    debug('core', 'debug', `class: ${Inputify.name}`, `process: arguments`);
+    return this.extracts.args;
+  }</code></pre>
+          <section id="values">
+            <h1>values</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.values()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>Returns the extracted values.</p></div>
+          <pre><code class="language-javascript">values() {
+  debug('core', 'debug', `class: ${Inputify.name}`, `process: values`);
+  return this.extracts.values;
+}</code></pre>
+          <section id="hasArgs">
+            <h1>hasArgs</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.hasArgs()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>Determines whether the arguments are empty.</p></div>
+          <pre><code class="language-javascript">hasArgs() {
+    debug('core', 'debug', `class: ${Inputify.name}`, `process: hasArgs`);
+    return !_.isEmpty(this.extracts.args);
+  }</code></pre>
+          <section id="hasValues">
+            <h1>hasValues</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Inputify.prototype.hasValues()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <div class="description"><p>Determines whether the values are empty.</p></div>
+          <pre><code class="language-javascript">hasValues() {
+  debug('core', 'debug', `class: ${Inputify.name}`, `process: hasValues`);
+  return !_.isEmpty(this.extracts.values);
+}
+
+}</code></pre>
+          <section id="inputify">
+            <h1>inputify</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">function</div><span>&nbsp;</span><span>inputify()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>phrase</td>
+                <td>String, Object</td>
+                <td><p>The phrase to parse.</p></td>
+              </tr>
+              <tr>
+                <td>args</td>
+                <td>String, Object, Array</td>
+                <td><p>The arguments to apply to the phrase.</p></td>
+              </tr>
+              <tr>
+                <td>return</td>
+                <td>Inputify</td>
+                <td><p>An instance of Inputify</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Returns instance of Inputify.</p></div>
+          <pre><code class="language-javascript">function inputify(phrase, ...args) {
+  'use strict';
+  return new Inputify(phrase, args);
+}</code></pre>
+          <div class="description"></div>
+          <pre><code class="language-javascript">export default inputify;</code></pre>
+          <div class="footer site-footer">
+            <div class="span site-footer-owner"><a href="https://github.com/mr-doc/mr-doc-theme-cayman">Cayman</a> is maintained by <a href="https://github.com/iwatakeshi">iwatakeshi</a>.</div>
+            <div class="span site-footer-credits">This page was generated by <a href="https://github.com/mr-doc/mr-doc">Mr. Doc</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/affix.js"></script>
+    <script src="../js/dropdown.js"></script>
+    <script src="../js/scrollspy.js"></script>
+    <script src="../js/prism.js"></script>
+    <script src="../js/prism-bash.js"></script>
+    <script>
+      $(document).ready(function(){
+        $('body').scrollspy({
+          target: ".bs-docs-sidebar",
+          offset: 40
+        });
+        $('#sidebar').affix({
+          offset:{
+            bottom:60,
+            top: 60
+          }
+        }) 
+      });
+    </script>
+  </body>
+</html>
