@@ -73,7 +73,7 @@ gulp.task('doc', ['build'], shell.task([
 /*
  * Clean the docs themes folder
  */
-gulp.task('clean-docs', ['gh-pages'], function (cb) {
+gulp.task('clean:docs', ['gh-pages'], function (cb) {
   rimraf('./docs/', cb);
 });
 
@@ -91,8 +91,13 @@ gulp.task('gh-pages', ['doc'], function () {
     .pipe(pages());
 });
 
+
+gulp.task('clean:backup', ['gh-pages'], function (cb) {
+  rimraf('.backup/', cb);
+});
+
 gulp.task("default", ['backup','lib','changelog','watch']);
 
 gulp.task('build', ['backup','lib','changelog','test']);
 
-gulp.task('docs', ['build', 'doc', 'gh-pages', 'clean-docs']);
+gulp.task('docs', ['build', 'doc', 'gh-pages', 'clean:docs', 'clean:backup']);
