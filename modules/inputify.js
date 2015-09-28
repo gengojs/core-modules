@@ -1,6 +1,3 @@
-/**
- * This module extracts the phrase and arguments.
- */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -29,10 +26,24 @@ var _extractify = require('./extractify');
 
 var _extractify2 = _interopRequireDefault(_extractify);
 
+/*
+    ## Input
+    
+    **Definition**: 
+
+    1. The first argument must be a string or an object.
+      * The string is the phrase to i18n
+      * The object must contain a 'phrase' key with a string value to i18n
+    2. The second must be n number of strings, an array or an object.
+      * The n number of strings will represent sprint-f
+      * The array will represent sprint-f
+      * The object will represent sprint-f, or other arguments
+*/
+
 /**
  * This class extends the Extractify class
  * by adding an API wrapper around it.
- * @class
+ * @class Inputify
  */
 
 var Inputify = (function (_Extractify) {
@@ -46,9 +57,16 @@ var Inputify = (function (_Extractify) {
     (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Inputify.name, '\n\textract: ' + JSON.stringify(this.extracts), '\n\tphrase: ' + this.phrase(), '\n\targs: ' + JSON.stringify(this.arguments()));
   }
 
+  /** 
+   * Returns instance of Inputify.
+   * @param  {String | Object} phrase The phrase to parse.
+   * @param  {...String | Object | Array} args The arguments to apply to the phrase.
+   * @return {Inputify}           An instance of Inputify
+   */
+
   /**
    * Returns the extracted phrase.
-   * @return {string} - The phrase to internationalize.
+   * @return {String} - The phrase to internationalize.
    */
 
   _createClass(Inputify, [{
@@ -60,7 +78,7 @@ var Inputify = (function (_Extractify) {
 
     /**
      * Returns the extracted arguments.
-     * @return {Array} - The extracted arguments
+     * @return {Array} - The extracted arguments.
      */
   }, {
     key: 'arguments',
@@ -71,7 +89,7 @@ var Inputify = (function (_Extractify) {
 
     /**
      * Returns the extracted values.
-     * @return {Object} - The extracted values (plain object)
+     * @return {Object} - The extracted values (plain object).
      */
   }, {
     key: 'values',
@@ -82,7 +100,7 @@ var Inputify = (function (_Extractify) {
 
     /**
      * Determines whether the arguments are empty.
-     * @return {boolean} True if the object is empty 
+     * @return {Boolean} True if the object is empty.
      */
   }, {
     key: 'hasArgs',
@@ -93,7 +111,7 @@ var Inputify = (function (_Extractify) {
 
     /**
      * Determines whether the values are empty.
-     * @return {boolean} True if the object is empty 
+     * @return {Boolean} True if the object is empty.
      */
   }, {
     key: 'hasValues',
@@ -106,7 +124,7 @@ var Inputify = (function (_Extractify) {
   return Inputify;
 })(_extractify2['default']);
 
-exports['default'] = function (phrase) {
+function inputify(phrase) {
   'use strict';
 
   for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
@@ -114,7 +132,11 @@ exports['default'] = function (phrase) {
   }
 
   return new Inputify(phrase, args);
-};
+}
 
+/** 
+ * @module inputify
+ */
+exports['default'] = inputify;
 module.exports = exports['default'];
 //# sourceMappingURL=../source maps/modules/inputify.js.map

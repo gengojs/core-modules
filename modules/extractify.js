@@ -19,19 +19,28 @@ var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 /**
  * This class extracts the input and seperates the arguments
  * into phrase, args, and values.
- * @class
+ * @class Extractify
  */
 
 var Extractify = function Extractify(phrase, array) {
   _classCallCheck(this, Extractify);
 
+  // Debug the current process
   (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'process: constructor');
+  // Store the extracted values
   var values = {},
-      args = [],
-      value,
-      length = array ? array.length : 0;
-  (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'array: ' + JSON.stringify(array), 'length: ' + length);
-  // If the arguments is greater than 2 (because of offset)
+
+  // Stores the extracted arguments
+  args = [],
+
+  // Temp
+  value,
+
+  // Stores the length of the array
+  length = array ? array.length : 0;
+  // Debug the inputs
+  (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'phrase: ' + (_lodash2['default'].isString(phrase) ? phrase : JSON.stringify(phrase)), 'array: ' + JSON.stringify(array), 'length: ' + length);
+  // If the arguments are greater than 2 (because of offset)
   if (length > 1) {
     // Just append them to the array
     array.forEach(function (item) {
@@ -52,10 +61,16 @@ var Extractify = function Extractify(phrase, array) {
     if (_lodash2['default'].has(phrase, 'locale')) values.locale = phrase.locale;
     if (_lodash2['default'].has(phrase, 'phrase')) phrase = phrase.phrase;
   }
+  // Store the extracted arguments
   this.extracts = {
     phrase: phrase, values: values, args: args
   };
-};
+}
+
+/**
+ * @module Extractify
+ */
+;
 
 exports['default'] = Extractify;
 module.exports = exports['default'];

@@ -1,6 +1,3 @@
-/**
- * This module exports all classes 
- */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -29,6 +26,10 @@ var _extractify = require('./extractify');
 
 var _extractify2 = _interopRequireDefault(_extractify);
 
+/**
+ * This module exports all classes
+ * @module
+ */
 exports['default'] = {
   inputify: _inputify2['default'], optify: _optify2['default'], plugify: _plugify2['default'], servify: _servify2['default'], extractify: _extractify2['default']
 };

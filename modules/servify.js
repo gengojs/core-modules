@@ -1,8 +1,3 @@
-/**
- * This module detects the server
- * and applies the API to the
- * request and response objects
- */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -23,22 +18,41 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+/**
+ * This class detects the server
+ * and applies the API to the
+ * request and response objects
+ * @class Servify
+ */
+
 var Servify = (function () {
-  function Servify(_this) {
+  function Servify(core) {
     _classCallCheck(this, Servify);
 
     (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Servify.name, 'process: constructor');
     this.server = '';
-    this.context = _this;
+    this.core = core;
   }
 
-  /* Applies the API to the objects */
+  /** 
+   * Creates an instance of Servify
+   * @param  {Core} core The context of Core
+   * @return {Servify}      An instance of Servify
+   */
+
+  /**
+   * Applies the API to the objects
+   * @param  {Object}   req  The request object
+   * @param  {Object}   res  The request object
+   * @param  {Function} next The next function
+   * @return {Servify}       The context of Servify
+   */
 
   _createClass(Servify, [{
     key: 'apply',
     value: function apply(req, res, next) {
       (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Servify.name, 'process: apply');
-      var _this = this.context;
+      var _this = this.core;
       // Koa?
       if (this.isKoa(req) && !_lodash2['default'].isEmpty(req)) {
         this.server = 'koa';
@@ -67,17 +81,33 @@ var Servify = (function () {
       return this;
     }
 
-    /* Framework detection */
+    /**
+     * Determines if the current server is Koa.
+     * @param  {Object}  req The request object
+     * @return {Boolean} True if the server is Koa.
+     */
   }, {
     key: 'isKoa',
     value: function isKoa(req) {
       return req && !req.raw ? req.response && req.request : !_lodash2['default'].isEmpty(this.server) ? this.server === 'koa' : false;
     }
+
+    /**
+     * Determines if the current server is Hapi.
+     * @param  {Object}  req The request object
+     * @return {Boolean} True if the server is Hapi.
+     */
   }, {
     key: 'isHapi',
     value: function isHapi(req) {
       return req ? req.raw : !_lodash2['default'].isEmpty(this.server) ? this.server === 'hapi' : false;
     }
+
+    /**
+     * Determines if the current server is Express.
+     * @param  {Object}  req The request object
+     * @return {Boolean} True if the server is Express.
+     */
   }, {
     key: 'isExpress',
     value: function isExpress(req) {
@@ -88,10 +118,13 @@ var Servify = (function () {
   return Servify;
 })();
 
-exports['default'] = function (_this) {
+function servify(core) {
   'use strict';
-  return new Servify(_this);
-};
-
+  return new Servify(core);
+}
+/** 
+ * @module servify
+ */
+exports['default'] = servify;
 module.exports = exports['default'];
 //# sourceMappingURL=../source maps/modules/servify.js.map
