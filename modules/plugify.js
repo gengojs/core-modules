@@ -1,6 +1,3 @@
-/**
- * This module initializes the plugins.
- */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
@@ -21,6 +18,13 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+/**
+ * This class determines whether the
+ * plugins are properly shipped and
+ * sets them for the core.
+ * @class Plugify
+ */
+
 var Plugify = (function () {
   function Plugify(plugins, options, defaults) {
     _classCallCheck(this, Plugify);
@@ -36,6 +40,21 @@ var Plugify = (function () {
       (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Plugify.name, 'plugins: type - ' + key + ' typeof - ' + typeof value);
     });
   }
+
+  /**
+   * Returns the plugins after creating an instance
+   * of Plugify
+   * @param  {Object | Function} plugins  [description]
+   * @param  {Object} options  The options to apply to the plugins
+   * @param  {Object} defaults The default plugins
+   * @return {Plugify}         An instance of Plugify
+   */
+
+  /**
+   * Sets the attributes in the plugin
+   * @param {Object} plugin  The plugin to set its attributes.
+   * @param {Object} options The options to apply
+   */
 
   _createClass(Plugify, [{
     key: 'setAttributes',
@@ -58,7 +77,12 @@ var Plugify = (function () {
       options[type] = _lodash2['default'].defaults(options, defaults);
     }
 
-    /* Normalizes a string */
+    /**
+     * Normalizes a string
+     * @param  {String} str The string to normalize
+     * @return {String}     The normalized string
+     * @private
+     */
   }, {
     key: 'normalize',
     value: function normalize(str) {
@@ -66,7 +90,11 @@ var Plugify = (function () {
       return str.toLowerCase().replace('-', '');
     }
 
-    // Initialize
+    /**
+     * Initializes the plugin's stack
+     * @return {Object} The plugin statck
+     * @private
+     */
   }, {
     key: 'init',
     value: function init() {
@@ -82,9 +110,9 @@ var Plugify = (function () {
     }
 
     /**
-     * plugs asserts that the plugins follows the criteria and
+     * Asserts that the plugins follows the definition and
      * creates an array of plugin(s)
-     * @param {object|Array|Function} plugins - The plugins to assert.
+     * @param {Object | Array| Function} plugins - The plugins to assert.
      * @return {Array} An array of plugins
      */
   }, {
@@ -115,9 +143,9 @@ var Plugify = (function () {
     }
 
     /**
-     * 'assert' asserts the plugin and makes sure that the plugin
-     * is in proper fomrat.
+     * Asserts the plugin is in proper format.
      * @param {object} plugin - The plugin to assert.
+     * @private
      */
   }, {
     key: 'assert',
@@ -136,8 +164,10 @@ var Plugify = (function () {
     }
 
     /**
-     * @private
-     * 'register' registers the plugins and sets the attributes.
+     * Registers the plugin
+     * @param  {Object} plugins  The plugin to register
+     * @param  {Object} options  The options to apply
+     * @param  {Object} defaults The default plugins
      */
   }, {
     key: 'register',
@@ -174,11 +204,11 @@ var Plugify = (function () {
     }
 
     /**
-     * @private
-     * 'bundle' bundles the plugins and transforms the plugin
+     * Bundles the plugins and transforms the plugin
      * stack from an array to an object. It also makes sure
      * that the stack has a fn placeholder to prevent an undefined
      * object from being used as a function
+     * @private
      */
   }, {
     key: 'bundle',
@@ -210,10 +240,15 @@ var Plugify = (function () {
   return Plugify;
 })();
 
-exports['default'] = function (plugins, options, defaults) {
+function plugify(plugins) {
   'use strict';
+  var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+  var defaults = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
   return new Plugify(plugins, options, defaults).plugins;
-};
-
+}
+/**
+ * @module plugify
+ */
+exports['default'] = plugify;
 module.exports = exports['default'];
 //# sourceMappingURL=../source maps/modules/plugify.js.map

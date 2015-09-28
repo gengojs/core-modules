@@ -32,17 +32,26 @@ var _gengojsDebug = require('gengojs-debug');
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
 /*
-    Definition: Options must be either a string or a plain object.
+    ## Options
+    
+    **Definition**: 
 
-    1. Options must be an object that specifies the type 
-       such as 'parser' or options must be a string that specifies 
+    1. Options must be a string that specifies 
        the path to the options file.
+    2. Options must be an object that specifies the type 
+       such as 'parser' followed by additional options for
+       that type.
        
-
-    Side note: Every plugin created must offer default options and must 
-    be responsible with letting the developers know about the options
-    for your plugin (through GitHub, etc).
+    **Note**:
+    
+    * Every plugin created must offer default options and must 
+      be responsible with letting the developers know about the options
+      for your plugin (through GitHub, etc).
 */
+/**
+ * This class sets the options used for the plugins
+ * @class Optify
+ */
 
 var Optify = function Optify(options) {
   _classCallCheck(this, Optify);
@@ -69,12 +78,24 @@ var Optify = function Optify(options) {
   } catch (error) {
     (0, _gengojsDebug2['default'])('core', 'error', 'class: ' + Optify.name, 'error: ' + (error.stack || error.toString()));
   }
-};
+}
 
-exports['default'] = function (options) {
+/**
+ * Returns the parsed options after
+ * creating an instance of Optify
+ * @param  {object} options The options to parse
+ * @return {object}         The parsed options
+ */
+;
+
+function optify(options) {
   'use strict';
   return new Optify(options).options;
-};
+}
 
+/**
+ * @module optify
+ */
+exports['default'] = optify;
 module.exports = exports['default'];
 //# sourceMappingURL=../source maps/modules/optify.js.map
