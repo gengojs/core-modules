@@ -1,14 +1,39 @@
-var gulp = require("gulp");
-var sourcemaps = require("gulp-sourcemaps");
-var babel = require("gulp-babel");
-var dest = require('gulp-dest');
-var mocha  = require('gulp-mocha');
-var jshint = require('gulp-jshint');
-var changelog = require('gulp-changelog');
+var 
+    gulp        = require("gulp"),
+    sourcemaps  = require("gulp-sourcemaps"),
+    babel       = require("gulp-babel"),
+    mocha       = require('gulp-mocha'),
+    jshint      = require('gulp-jshint'),
+    pages       = require('gulp-gh-pages'),
+    rimraf      = require('rimraf'),
+    beautify    = require('gulp-jsbeautify'),
+    shell       = require('gulp-shell'),
+    changelog   = require('gulp-changelog'),
+    config      = require('./config.json');
 
-gulp.task("lib:entry", function () {
+/** Backs up the files in case of emergency! */
+gulp.task('backup', function () {
+  return gulp
+    .src('lib/**/**/*.js')
+    .pipe(gulp.dest('./.backup'));
+});
+
+gulp.task('recover', function () {
+  return gulp
+    .src('./.backup/**/**/*.js')
+    .pipe(gulp.dest('lib/'));
+});
+
+/* Formats the files */
+gulp.task('beautify', ['backup'], function () {
   return gulp.src('./lib/**/**/*.js')
-    .pipe(jshint())
+    .pipe(beautify(config.beautify))
+    .pipe(gulp.dest('./lib'));
+});
+
+gulp.task("lib", ['beautify'], function () {
+  return gulp.src('./lib/**/**/*.js')
+    .pipe(jshint(config.jshint))
     .pipe(jshint.reporter('jshint-stylish'))
     .pipe(jshint.reporter('fail'))
     .pipe(sourcemaps.init())
@@ -20,12 +45,36 @@ gulp.task("lib:entry", function () {
 });
 
 gulp.task('watch', function () {
-    return gulp.watch('./lib/**/*.*', ['lib:entry']);
+    return gulp.watch('./lib/**/*.*', ['lib']);
 });
-gulp.task('test', ['lib:entry'], function() {
+gulp.task('test', ['lib'], function() {
   return gulp.src('./tests/**/**/*.js', {read: false})
         // gulp-mocha needs filepaths so you can't have any plugins before it
         .pipe(mocha());
+});
+
+/* 
+ * Runs the doxx command and builds the docs 
+* Install other themes here, generate docs for each.
+*/
+gulp.task('doc', ['build'], shell.task([
+  (function(){
+    var doc = 'node_modules/mr-doc/bin/mr-doc',
+        cmd = {
+          source: ' -s lib/',
+          output: ' -o docs/',
+          name:' -n "gengo.js/core/modules"',
+          theme:' -t cayman'
+        };
+    return doc + cmd.source + cmd.output + cmd.name + cmd.theme;
+  })()
+]));
+
+/*
+ * Clean the docs themes folder
+ */
+gulp.task('clean-docs', ['gh-pages'], function (cb) {
+  rimraf('./docs/', cb);
 });
 
 gulp.task('changelog', function(cb){
@@ -34,6 +83,16 @@ gulp.task('changelog', function(cb){
   });
 });
 
-gulp.task("default", ['lib:entry','changelog','watch']);
+/*
+ * Create the gh-pages branch - wont push automatically
+ */
+gulp.task('gh-pages', ['doc'], function () {
+  return gulp.src('./docs/**/*')
+    .pipe(pages());
+});
 
-gulp.task('build', ['lib:entry','changelog','test']);
+gulp.task("default", ['backup','lib','changelog','watch']);
+
+gulp.task('build', ['backup','lib','changelog','test']);
+
+gulp.task('docs', ['build', 'doc', 'gh-pages', 'clean-docs']);

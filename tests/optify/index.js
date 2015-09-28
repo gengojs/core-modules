@@ -1,4 +1,3 @@
-/** global describe, it */
 var assert = require('chai').assert;
 var optify = require('../../modules/optify');
 var root = require('app-root-path');

@@ -144,7 +144,9 @@ var Inputify = (function () {
       var hasValues = function hasValues() {
         return _this._extract.hasValues();
       };
-      return { args: args, values: values, hasArgs: hasArgs, hasValues: hasValues };
+      return {
+        args: args, values: values, hasArgs: hasArgs, hasValues: hasValues
+      };
     }
   }]);
 

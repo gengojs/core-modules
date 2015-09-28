@@ -22,6 +22,8 @@ var _servify = require('./servify');
 
 var _servify2 = _interopRequireDefault(_servify);
 
-exports['default'] = { inputify: _inputify2['default'], optify: _optify2['default'], plugify: _plugify2['default'], servify: _servify2['default'] };
+exports['default'] = {
+  inputify: _inputify2['default'], optify: _optify2['default'], plugify: _plugify2['default'], servify: _servify2['default']
+};
 module.exports = exports['default'];
 //# sourceMappingURL=../source maps/modules/index.js.map

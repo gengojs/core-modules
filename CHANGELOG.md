@@ -1,3 +1,13 @@
+1.3.0 / 2015-08-31
+==================
+
+  * Update
+    Bumped version for previous fix.
+  * Merge pull request [#4](https://github.com/iwatakeshi/gengojs-core-modules/issues/4) from iwatakeshi/fix-undefined-functions
+    Fix
+  * Fix
+    Fixed undefined functions when initializing plugins.
+
 1.2.0 / 2015-08-31
 ==================
 

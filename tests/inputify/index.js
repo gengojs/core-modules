@@ -1,4 +1,3 @@
-/** global describe, it */
 var assert = require('chai').assert;
 var __ = require('../../modules/inputify');
 
