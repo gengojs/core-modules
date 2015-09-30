@@ -28,7 +28,6 @@
   },
   "homepage": "https://github.com/gengojs/gengojs-core-modules",
   "devDependencies": {
-    "app-root-path": "^1.0.0",
     "chai": "^3.2.0",
     "gulp": "^3.9.0",
     "gulp-babel": "^5.2.1",
@@ -46,7 +45,7 @@
     "rimraf": "^2.4.3"
   },
   "dependencies": {
-    "gengojs-debug": "^1.1.1",
+    "gengojs-debug": "^2.0.4",
     "js-yaml": "^3.4.0",
     "lodash": "^3.10.1"
   }

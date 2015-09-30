@@ -26,6 +26,7 @@ var _extractify = require('./extractify');
 
 var _extractify2 = _interopRequireDefault(_extractify);
 
+var log = (0, _gengojsDebug2['default'])('core');
 /*
     ## Input
     
@@ -53,8 +54,7 @@ var Inputify = (function (_Extractify) {
     _classCallCheck(this, Inputify);
 
     _get(Object.getPrototypeOf(Inputify.prototype), 'constructor', this).call(this, phrase, args);
-    (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: constructor');
-    (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Inputify.name, '\n\textract: ' + JSON.stringify(this.extracts), '\n\tphrase: ' + this.phrase(), '\n\targs: ' + JSON.stringify(this.arguments()));
+    log.debug('class: ' + Inputify.name, 'process: phrase').info('extract:', this.extracts).info('phrase:', this.phrase()).info('args:', this.arguments());
   }
 
   /** 
@@ -72,7 +72,7 @@ var Inputify = (function (_Extractify) {
   _createClass(Inputify, [{
     key: 'phrase',
     value: function phrase() {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: phrase');
+      log.debug('class: ' + Inputify.name, 'process: phrase');
       return this.extracts.phrase;
     }
 
@@ -83,7 +83,7 @@ var Inputify = (function (_Extractify) {
   }, {
     key: 'arguments',
     value: function _arguments() {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: arguments');
+      log.debug('class: ' + Inputify.name, 'process: arguments');
       return this.extracts.args;
     }
 
@@ -94,7 +94,7 @@ var Inputify = (function (_Extractify) {
   }, {
     key: 'values',
     value: function values() {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: values');
+      log.debug('class: ' + Inputify.name, 'process: values');
       return this.extracts.values;
     }
 
@@ -105,7 +105,7 @@ var Inputify = (function (_Extractify) {
   }, {
     key: 'hasArgs',
     value: function hasArgs() {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: hasArgs');
+      log.debug('class: ' + Inputify.name, 'process: hasArgs');
       return !_lodash2['default'].isEmpty(this.extracts.args);
     }
 
@@ -116,7 +116,7 @@ var Inputify = (function (_Extractify) {
   }, {
     key: 'hasValues',
     value: function hasValues() {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Inputify.name, 'process: hasValues');
+      log.debug('class: ' + Inputify.name, 'process: hasValues');
       return !_lodash2['default'].isEmpty(this.extracts.values);
     }
   }]);

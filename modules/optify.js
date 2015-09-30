@@ -31,6 +31,7 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+var log = (0, _gengojsDebug2['default'])('core');
 /*
     ## Options
     
@@ -56,7 +57,7 @@ var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 var Optify = function Optify(options) {
   _classCallCheck(this, Optify);
 
-  (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Optify.name, 'process: constructor');
+  log.debug('class: ' + Optify.name, 'process: constructor');
   this.options = {};
   var settings;
   try {
@@ -76,7 +77,7 @@ var Optify = function Optify(options) {
       }
     } else this.options = settings || {};
   } catch (error) {
-    (0, _gengojsDebug2['default'])('core', 'error', 'class: ' + Optify.name, 'error: ' + (error.stack || error.toString()));
+    log.error('class: ' + Optify.name, 'error: ' + (error.stack || error.toString()));
   }
 }
 

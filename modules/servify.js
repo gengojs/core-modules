@@ -18,6 +18,7 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+var log = (0, _gengojsDebug2['default'])('core');
 /**
  * This class detects the server
  * and applies the API to the
@@ -29,7 +30,7 @@ var Servify = (function () {
   function Servify(core) {
     _classCallCheck(this, Servify);
 
-    (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Servify.name, 'process: constructor');
+    log.debug('class: ' + Servify.name, 'process: constructor');
     this.server = '';
     this.core = core;
   }
@@ -51,7 +52,7 @@ var Servify = (function () {
   _createClass(Servify, [{
     key: 'apply',
     value: function apply(req, res, next) {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Servify.name, 'process: apply');
+      log.debug('class: ' + Servify.name, 'process: apply');
       var _this = this.core;
       // Koa?
       if (this.isKoa(req) && !_lodash2['default'].isEmpty(req)) {
@@ -75,7 +76,7 @@ var Servify = (function () {
         // Apply to API to the view
         if (res && res.locals) _this.assign(res.locals);
       }
-      (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Servify.name, 'server: ' + this.server);
+      log.info('class: ' + Servify.name, 'server: ' + this.server);
       // Make sure next exists and call it.
       if (_lodash2['default'].isFunction(next)) next();
       return this;

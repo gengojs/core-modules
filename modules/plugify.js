@@ -18,6 +18,7 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+var log = (0, _gengojsDebug2['default'])('core');
 /**
  * This class determines whether the
  * plugins are properly shipped and
@@ -29,7 +30,7 @@ var Plugify = (function () {
   function Plugify(plugins, options, defaults) {
     _classCallCheck(this, Plugify);
 
-    (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Plugify.name, 'process: constructor');
+    log.debug('class: ' + Plugify.name, 'process: constructor');
     // Type stack to keep track which type has been plugged in
     this.types = ['api', 'backend', 'parser', 'header', 'localize', 'router'];
     // Initialize the plugin
@@ -37,7 +38,7 @@ var Plugify = (function () {
     this.register(plugins, options, defaults);
     this.bundle();
     _lodash2['default'].forEach(this.plugins, function (value, key) {
-      (0, _gengojsDebug2['default'])('core', 'info', 'class: ' + Plugify.name, 'plugins: type - ' + key + ' typeof - ' + typeof value);
+      log.info('class: ' + Plugify.name, 'plugins: type - ' + key + ' typeof - ' + typeof value);
     });
   }
 
@@ -59,7 +60,7 @@ var Plugify = (function () {
   _createClass(Plugify, [{
     key: 'setAttributes',
     value: function setAttributes(plugin, options) {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Plugify.name, 'process: setAttributes');
+      log.debug('class: ' + Plugify.name, 'process: setAttributes');
       var main = plugin.main;
       var defaults = plugin.defaults;
       var _plugin$package = plugin['package'];
@@ -86,7 +87,7 @@ var Plugify = (function () {
   }, {
     key: 'normalize',
     value: function normalize(str) {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Plugify.name, 'process: normalize');
+      log.debug('class: ' + Plugify.name, 'process: normalize');
       return str.toLowerCase().replace('-', '');
     }
 
@@ -98,7 +99,7 @@ var Plugify = (function () {
   }, {
     key: 'init',
     value: function init() {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Plugify.name, 'process: init');
+      log.debug('class: ' + Plugify.name, 'process: init');
       return _lodash2['default'].assign({}, {
         parser: [],
         router: [],
@@ -118,7 +119,7 @@ var Plugify = (function () {
   }, {
     key: 'plugs',
     value: function plugs(plugins) {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Plugify.name, 'process: plugs');
+      log.debug('class: ' + Plugify.name, 'process: plugs');
       var plugs = [];
       // 'plugins' is a plain object
       if (_lodash2['default'].isPlainObject(plugins)) {
@@ -129,7 +130,7 @@ var Plugify = (function () {
             if (!_lodash2['default'].isFunction(ship)) throw new Error('Uh oh! The ship must be a function!');
             if (!_lodash2['default'].isPlainObject(ship())) throw new Error('Woops! Did the ship forget to return a plain object?');
           } catch (error) {
-            (0, _gengojsDebug2['default'])('core', 'error', 'class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
+            log.error('class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
           }
           plugs.push(ship());
         });
@@ -150,7 +151,7 @@ var Plugify = (function () {
   }, {
     key: 'assert',
     value: function assert(plugin) {
-      (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Plugify.name, 'process: assert');
+      log.debug('class: ' + Plugify.name, 'process: assert');
       try {
         if (_lodash2['default'].has(plugin, 'main')) throw new Error('Woops! Did you forget the main function?');
         if (_lodash2['default'].has(plugin, 'package')) throw new Error('Woops! Did you forget the package?');
@@ -159,7 +160,7 @@ var Plugify = (function () {
         if (!_lodash2['default'].has(plugin['package'], 'defaults')) throw new Error('Woops! Did you forget to add "defaults"?');
         if (_lodash2['default'].has(plugin, 'defaults')) throw new Error('Woops! Did you forget to add the "defaults"?');
       } catch (error) {
-        (0, _gengojsDebug2['default'])('core', 'error', 'class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
+        log.error('class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
       }
     }
 
@@ -178,7 +179,7 @@ var Plugify = (function () {
       // and add defaults if none exist
       _lodash2['default'].forEach(plugs, function (plugin) {
         // Assert
-        this.assert(plugin);
+        if (!_lodash2['default'].isEmpty(defaults)) this.assert(plugin);else log.warn('class: ' + Plugify.name, 'process: register').warn('Defaults is empty! Possibly in testing mode?');
         var type = this.normalize(plugin['package'].type);
         // If the default plugin already exists
         // then remove the default and replace it with

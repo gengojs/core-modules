@@ -16,6 +16,7 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+var log = (0, _gengojsDebug2['default'])('core');
 /**
  * This class extracts the input and seperates the arguments
  * into phrase, args, and values.
@@ -26,7 +27,7 @@ var Extractify = function Extractify(phrase, array) {
   _classCallCheck(this, Extractify);
 
   // Debug the current process
-  (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'process: constructor');
+  log.debug('class: ' + Extractify.name, 'process: constructor');
   // Store the extracted values
   var values = {},
 
@@ -39,7 +40,7 @@ var Extractify = function Extractify(phrase, array) {
   // Stores the length of the array
   length = array ? array.length : 0;
   // Debug the inputs
-  (0, _gengojsDebug2['default'])('core', 'debug', 'class: ' + Extractify.name, 'phrase: ' + (_lodash2['default'].isString(phrase) ? phrase : JSON.stringify(phrase)), 'array: ' + JSON.stringify(array), 'length: ' + length);
+  log.debug('phrase:', phrase).debug('array', array).debug('length:', length);
   // If the arguments are greater than 2 (because of offset)
   if (length > 1) {
     // Just append them to the array
