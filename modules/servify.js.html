@@ -53,7 +53,7 @@
           <div class="description"><p>This class detects the server<br />and applies the API to the<br />request and response objects</p></div>
           <pre><code class="language-javascript">class Servify {
   constructor(core) {
-      debug('core', 'debug', `class: ${Servify.name}`, `process: constructor`);
+      log.debug(`class: ${Servify.name}`, `process: constructor`);
       this.server = '';
       this.core = core;
     }</code></pre>
@@ -97,7 +97,7 @@
           </table>
           <div class="description"><p>Applies the API to the objects</p></div>
           <pre><code class="language-javascript">apply(req, res, next) {
-  debug('core', 'debug', `class: ${Servify.name}`, `process: apply`);
+  log.debug(`class: ${Servify.name}`, `process: apply`);
   var _this = this.core;
   // Koa?
   if (this.isKoa(req) &amp;&amp; !_.isEmpty(req)) {
@@ -123,7 +123,7 @@
     // Apply to API to the view
     if (res &amp;&amp; res.locals) _this.assign(res.locals);
   }
-  debug('core', 'info', `class: ${Servify.name}`, `server: ${this.server}`);
+  log.info(`class: ${Servify.name}`, `server: ${this.server}`);
   // Make sure next exists and call it.
   if (_.isFunction(next)) next();
   return this;

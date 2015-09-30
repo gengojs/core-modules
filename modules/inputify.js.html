@@ -60,11 +60,10 @@
           <pre><code class="language-javascript">class Inputify extends Extractify {
   constructor(phrase, args) {
       super(phrase, args);
-      debug('core', 'debug', `class: ${Inputify.name}`, `process: constructor`);
-      debug('core', 'info', `class: ${Inputify.name}`,
-        `\n\textract: ${JSON.stringify(this.extracts)}`,
-        `\n\tphrase: ${this.phrase()}`,
-        `\n\targs: ${JSON.stringify(this.arguments())}`);
+      log.debug(`class: ${Inputify.name}`, `process: phrase`)
+        .info('extract:', this.extracts)
+        .info('phrase:', this.phrase())
+        .info('args:', this.arguments());
     }</code></pre>
           <section id="phrase">
             <h1>phrase</h1>
@@ -75,7 +74,7 @@
           </section>
           <div class="description"><p>Returns the extracted phrase.</p></div>
           <pre><code class="language-javascript">phrase() {
-    debug('core', 'debug', `class: ${Inputify.name}`, `process: phrase`);
+    log.debug(`class: ${Inputify.name}`, `process: phrase`);
     return this.extracts.phrase;
   }</code></pre>
           <section id="arguments">
@@ -87,7 +86,7 @@
           </section>
           <div class="description"><p>Returns the extracted arguments.</p></div>
           <pre><code class="language-javascript">arguments() {
-    debug('core', 'debug', `class: ${Inputify.name}`, `process: arguments`);
+    log.debug(`class: ${Inputify.name}`, `process: arguments`);
     return this.extracts.args;
   }</code></pre>
           <section id="values">
@@ -99,7 +98,7 @@
           </section>
           <div class="description"><p>Returns the extracted values.</p></div>
           <pre><code class="language-javascript">values() {
-  debug('core', 'debug', `class: ${Inputify.name}`, `process: values`);
+  log.debug(`class: ${Inputify.name}`, `process: values`);
   return this.extracts.values;
 }</code></pre>
           <section id="hasArgs">
@@ -111,7 +110,7 @@
           </section>
           <div class="description"><p>Determines whether the arguments are empty.</p></div>
           <pre><code class="language-javascript">hasArgs() {
-    debug('core', 'debug', `class: ${Inputify.name}`, `process: hasArgs`);
+    log.debug(`class: ${Inputify.name}`, `process: hasArgs`);
     return !_.isEmpty(this.extracts.args);
   }</code></pre>
           <section id="hasValues">
@@ -123,7 +122,7 @@
           </section>
           <div class="description"><p>Determines whether the values are empty.</p></div>
           <pre><code class="language-javascript">hasValues() {
-  debug('core', 'debug', `class: ${Inputify.name}`, `process: hasValues`);
+  log.debug(`class: ${Inputify.name}`, `process: hasValues`);
   return !_.isEmpty(this.extracts.values);
 }
 

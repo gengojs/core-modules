@@ -40,7 +40,8 @@
 import path from 'path';
 import fs from 'fs';
 import yaml from 'js-yaml';
-import debug from 'gengojs-debug';</code></pre>
+import debug from 'gengojs-debug';
+let log = debug('core');</code></pre>
           <div class="description"><h2>Options</h2>
 <p><em>Definition*</em>: </p><pre><code>1. Options must be a string that specifies 
    the path to the options file.
@@ -58,7 +59,7 @@ import debug from 'gengojs-debug';</code></pre>
           <div class="description"><p>This class sets the options used for the plugins</p></div>
           <pre><code class="language-javascript">class Optify {
   constructor(options) {
-    debug('core', 'debug', `class: ${Optify.name}`, `process: constructor`);
+    log.debug(`class: ${Optify.name}`, `process: constructor`);
     this.options = {};
     var settings;
     try {
@@ -82,7 +83,7 @@ import debug from 'gengojs-debug';</code></pre>
         }
       } else this.options = settings || {};
     } catch (error) {
-      debug('core', 'error', `class: ${Optify.name}`,
+      log.error(`class: ${Optify.name}`,
         `error: ${error.stack || error.toString()}`);
     }
   }
