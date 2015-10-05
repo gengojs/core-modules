@@ -8,6 +8,8 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _lodash = require('lodash');
@@ -75,7 +77,7 @@ var Plugify = (function () {
       // Insert plugins as callbacks
       this.plugins[type].push(main);
       // Set the default options by merging with user's
-      options[type] = _lodash2['default'].defaults(options, defaults);
+      options = _lodash2['default'].merge({}, _defineProperty({}, type, defaults), _lodash2['default'].isEmpty(options) ? _defineProperty({}, type, {}) : options);
     }
 
     /**

@@ -41,7 +41,9 @@ var gengopack = {
     return {
       main: fixture,
       package: pkg,
-      defaults: {}
+      defaults: {
+        greet:'hello'
+      }
     };
   },
   router: function() {
@@ -52,7 +54,9 @@ var gengopack = {
     return {
       main: fixture1,
       package: pkg,
-      defaults: {}
+      defaults: {
+        greet2:'hello'
+      }
     };
   },
   backend: function() {
@@ -63,7 +67,9 @@ var gengopack = {
     return {
       main: fixture2,
       package: pkg,
-      defaults: {}
+      defaults: {
+        greet3:'hello'
+      }
     };
   },
   api: function() {
@@ -74,7 +80,9 @@ var gengopack = {
     return {
       main: fixture3,
       package: pkg,
-      defaults: {}
+      defaults: {
+        greet4:'hello'
+      }
     };
   },
   header: function() {
@@ -85,7 +93,9 @@ var gengopack = {
     return {
       main: fixture4,
       package: pkg,
-      defaults: {}
+      defaults: {
+        greet5:'hello'
+      }
     };
   },
   localize: function() {
@@ -96,7 +106,9 @@ var gengopack = {
     return {
       main: fixture5,
       package: pkg,
-      defaults: {}
+      defaults: {
+        greet6:'hello'
+      }
     };
   }
 };
