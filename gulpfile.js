@@ -39,9 +39,7 @@ gulp.task("lib", ['beautify'], function () {
     .pipe(sourcemaps.init())
     .pipe(babel())
     .pipe(sourcemaps.write("./source maps/"))
-    .pipe(gulp.dest(function(file){
-      return file.base.replace('lib/','');
-     }));
+    .pipe(gulp.dest('src/'));
 });
 
 gulp.task('watch', function () {

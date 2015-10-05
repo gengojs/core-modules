@@ -1,5 +1,5 @@
 var assert = require('chai').assert;
-var __ = require('../../modules/inputify');
+var __ = require('../../src/modules/inputify');
 
 describe("Inputify", function () {
 

@@ -1,5 +1,5 @@
 var assert = require('chai').assert;
-var optify = require('../../modules/optify');
+var optify = require('../../src/modules/optify');
 var path = require('path');
 var fixtures = path.resolve(__dirname, '../optify/fixtures/');
 

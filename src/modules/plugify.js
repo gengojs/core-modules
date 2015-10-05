@@ -77,7 +77,7 @@ var Plugify = (function () {
       // Insert plugins as callbacks
       this.plugins[type].push(main);
       // Set the default options by merging with user's
-      options = _lodash2['default'].merge({}, _defineProperty({}, type, defaults), _lodash2['default'].isEmpty(options) ? _defineProperty({}, type, {}) : options);
+      _lodash2['default'].merge(options, _defineProperty({}, type, defaults), options);
     }
 
     /**
