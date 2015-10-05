@@ -20,6 +20,8 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+require('sugar');
+
 var log = (0, _gengojsDebug2['default'])('core');
 /**
  * This class determines whether the
@@ -77,7 +79,7 @@ var Plugify = (function () {
       // Insert plugins as callbacks
       this.plugins[type].push(main);
       // Set the default options by merging with user's
-      _lodash2['default'].merge(options, _defineProperty({}, type, defaults), options);
+      Object.merge(options, _defineProperty({}, type, defaults), true);
     }
 
     /**

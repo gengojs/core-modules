@@ -1,6 +1,3 @@
-/**
- * This module reads or sets the initial options
- */
 'use strict';
 
 Object.defineProperty(exports, '__esModule', {
