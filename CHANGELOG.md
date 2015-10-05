@@ -1,3 +1,12 @@
+2.0.6 / 2015-10-05
+==================
+
+  * Release v2.0.6.
+  * Update
+    Updated change log.
+  * Fix
+    Fixed [#1](https://github.com/gengojs/gengojs-core-modules/issues/1).
+
 2.0.5 / 2015-10-04
 ==================
 
