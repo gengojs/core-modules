@@ -128,7 +128,7 @@ var Plugify = (function () {
           try {
             // Assert that ship is a function
             if (!_lodash2['default'].isFunction(ship)) throw new Error('Uh oh! The ship must be a function!');
-            if (!_lodash2['default'].isPlainObject(ship())) throw new Error('Woops! Did the ship forget to return a plain object?');
+            if (!_lodash2['default'].isPlainObject(ship())) throw new Error('Whoops! Did the ship forget to return a plain object?');
           } catch (error) {
             log.error('class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
           }
@@ -137,7 +137,7 @@ var Plugify = (function () {
       }
       if (_lodash2['default'].isArray(plugins)) plugs = plugins;
       if (_lodash2['default'].isFunction(plugins)) {
-        if (!_lodash2['default'].isPlainObject(plugins())) throw new Error('Woops! Did the ship forget to return a plain object?');
+        if (!_lodash2['default'].isPlainObject(plugins())) throw new Error('Whoops! Did the ship forget to return a plain object?');
         plugs.push(plugins());
       }
       return plugs;
@@ -153,12 +153,12 @@ var Plugify = (function () {
     value: function assert(plugin) {
       log.debug('class: ' + Plugify.name, 'process: assert');
       try {
-        if (_lodash2['default'].has(plugin, 'main')) throw new Error('Woops! Did you forget the main function?');
-        if (_lodash2['default'].has(plugin, 'package')) throw new Error('Woops! Did you forget the package?');
-        if (_lodash2['default'].has(plugin['package'], 'type')) throw new Error('Woops! Did you forget the "type" of plugin?');
-        if (_lodash2['default'].has(plugin['package'], 'name')) throw new Error('Woops! Did you forget the "name" of plugin?');
-        if (!_lodash2['default'].has(plugin['package'], 'defaults')) throw new Error('Woops! Did you forget to add "defaults"?');
-        if (_lodash2['default'].has(plugin, 'defaults')) throw new Error('Woops! Did you forget to add the "defaults"?');
+        if (_lodash2['default'].has(plugin, 'main')) throw new Error('Whoops! Did you forget the main function?');
+        if (_lodash2['default'].has(plugin, 'package')) throw new Error('Whoops! Did you forget the package?');
+        if (_lodash2['default'].has(plugin['package'], 'type')) throw new Error('Whoops! Did you forget the "type" of plugin?');
+        if (_lodash2['default'].has(plugin['package'], 'name')) throw new Error('Whoops! Did you forget the "name" of plugin?');
+        if (!_lodash2['default'].has(plugin['package'], 'defaults')) throw new Error('Whoops! Did you forget to add "defaults"?');
+        if (_lodash2['default'].has(plugin, 'defaults')) throw new Error('Whoops! Did you forget to add the "defaults"?');
       } catch (error) {
         log.error('class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
       }
