@@ -109,11 +109,9 @@
     // Insert plugins as callbacks
     this.plugins[type].push(main);
     // Set the default options by merging with user's
-    options = _.merge({}, {
+    _.merge(options, {
       [type]: defaults
-    }, _.isEmpty(options) ? {
-      [type]: {}
-    } : options);
+    }, options);
   }</code></pre>
           <section id="plugs">
             <h1>plugs</h1>
