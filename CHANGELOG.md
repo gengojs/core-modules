@@ -1,3 +1,14 @@
+2.0.5 / 2015-10-04
+==================
+
+  * Release v2.0.5.
+  * Release v2.0.4.
+  * Release v2.0.3.
+  * Update
+    updated change log.
+  * Test Fix
+    Should fix an issue where the duplicates were found in the options.
+
 2.0.2 / 2015-10-04
 ==================
 
