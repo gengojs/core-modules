@@ -1,3 +1,13 @@
+2.0.7 / 2015-10-05
+==================
+
+  * Release v2.0.7.
+  * Update
+    Cleaned code.
+    Attempt to fix options.
+  * Update
+    Updated change log.
+
 2.0.6 / 2015-10-05
 ==================
 

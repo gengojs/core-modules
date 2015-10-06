@@ -23,50 +23,43 @@ describe("Plugify", function () {
   describe("options", function () {
     var options = {
       parser: {
-        shout: 'hello',
+        greet: 'hello 1',
       },
       router: {
-        shout2: 'hello'
+        greet2: 'hello 2'
       },
       backend: {
-        shout2: 'hello'
+        greet3: 'hello 3'
       },
       api: {
-        shout2: 'hello'
+        greet4: 'hello 4'
       },
       header: {
-        shout2: 'hello'
       },
       localize: {
-        shout2: 'hello'
+        greet6: 'hello 6'
       }
     };
     var plugins = plugify(plugs(), options);
     it("should merge user settings", function () {
       assert.deepEqual(options, {
         parser: {
-          shout: 'hello',
-          greet :'hello',
+          greet :'hello 1',
         },
         router: {
-          shout2: 'hello',
-          greet2 :'hello',
+          greet2 :'hello 2',
         },
         backend: {
-          shout2: 'hello',
-          greet3 :'hello',
+          greet3 :'hello 3',
         },
         api: {
-          shout2: 'hello',
-          greet4 :'hello',
+          greet4 :'hello 4',
         },
         header: {
-          shout2: 'hello',
           greet5 :'hello',
         },
         localize: {
-          shout2: 'hello',
-          greet6 :'hello',
+          greet6 :'hello 6',
         }
       });
     });

@@ -8,8 +8,6 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { 'default': obj }; }
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var _lodash = require('lodash');
@@ -19,8 +17,6 @@ var _lodash2 = _interopRequireDefault(_lodash);
 var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
-
-require('sugar');
 
 var log = (0, _gengojsDebug2['default'])('core');
 /**
@@ -37,6 +33,8 @@ var Plugify = (function () {
     log.debug('class: ' + Plugify.name, 'process: constructor');
     // Type stack to keep track which type has been plugged in
     this.types = ['api', 'backend', 'parser', 'header', 'localize', 'router'];
+    // Local options
+    this.options = {};
     // Initialize the plugin
     this.plugins = this.init();
     this.register(plugins, options, defaults);
@@ -44,6 +42,7 @@ var Plugify = (function () {
     _lodash2['default'].forEach(this.plugins, function (value, key) {
       log.info('class: ' + Plugify.name, 'plugins: type - ' + key + ' typeof - ' + typeof value);
     });
+    _lodash2['default'].defaultsDeep(options, this.options);
   }
 
   /**
@@ -63,7 +62,7 @@ var Plugify = (function () {
 
   _createClass(Plugify, [{
     key: 'setAttributes',
-    value: function setAttributes(plugin, options) {
+    value: function setAttributes(plugin) {
       log.debug('class: ' + Plugify.name, 'process: setAttributes');
       var main = plugin.main;
       var defaults = plugin.defaults;
@@ -78,8 +77,8 @@ var Plugify = (function () {
       this.plugins[type][name]['package'] = plugin['package'];
       // Insert plugins as callbacks
       this.plugins[type].push(main);
-      // Set the default options by merging with user's
-      Object.merge(options, _defineProperty({}, type, defaults), true);
+      // Set the default options
+      if (!this.options[type]) this.options[type] = defaults;
     }
 
     /**
@@ -176,7 +175,7 @@ var Plugify = (function () {
      */
   }, {
     key: 'register',
-    value: function register(plugins, options, defaults) {
+    value: function register(plugins, defaults) {
       var plugs = this.plugs(plugins);
       // Register and then restrict the
       // plugins to one plugin per type
@@ -191,7 +190,7 @@ var Plugify = (function () {
         if (this.plugins[type].length === 1) {
           if (!_lodash2['default'].isUndefined(defaults)) this.plugins[type].pop();
           // Set the plugin attributes
-          this.setAttributes(plugin, options);
+          this.setAttributes(plugin);
           // If there are multiple plugins of the same type
           // restrict it to one plugin
         } else if (this.plugins[type].length > 1) {
@@ -203,7 +202,7 @@ var Plugify = (function () {
             // Since no there are no default plugins,
             // just add the plugin to the stack
           } else {
-              this.setAttributes(plugin, options);
+              this.setAttributes(plugin);
             }
       }, this);
     }
