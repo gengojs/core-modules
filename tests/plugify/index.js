@@ -10,17 +10,10 @@ describe("Plugify", function () {
     it("should return the correct plugins", function () {
       assert.isFunction(plugs);
       assert.isObject(plugins);
-      assert.notDeepEqual(plugins, {
-        parser: [],
-        router: [],
-        backend: [],
-        api: [],
-        header: [],
-        localize: []
-      });
+      assert.equal(plugins.parser.package.name, 'mocha-parser');
       plugins = plugify((function(){
         return {
-          main:function(){},
+          main:function ship(){},
           package: { name : 'override-parser', 'type': 'parser' },
           defaults: {
             greet:'hello'
@@ -28,6 +21,7 @@ describe("Plugify", function () {
         };
       })(), {}, plugs());
       assert.equal(plugins.parser.package.name, 'override-parser');
+      assert.equal(plugins.router.package.name, 'mocha-router');
     });
   });
   

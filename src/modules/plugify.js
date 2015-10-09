@@ -27,57 +27,113 @@ var log = (0, _gengojsDebug2['default'])('core');
  */
 
 var Plugify = (function () {
+  /**
+   * plugins - The user's plugins ( [], function, {} )
+   * options - The user's options ( {} )
+   * defaults - The gengojs-default-pack ( { //...// }, {} )
+   * 
+   * Psuedo code:
+   * case 1: 'plugins' may be an array of random plugins.
+   *  -> assert that each plugin are properly shipped
+   *  -> 
+   */
+
   function Plugify(plugins, options, defaults) {
+    var _this = this;
+
     _classCallCheck(this, Plugify);
 
     log.debug('class: ' + Plugify.name, 'process: constructor');
-    // Type stack to keep track which type has been plugged in
-    this.types = ['api', 'backend', 'parser', 'header', 'localize', 'router'];
     // Local options
     this.options = {};
-    // Initialize the plugin
-    this.plugins = this.init();
-    this.register(plugins, options, defaults);
-    this.bundle();
-    _lodash2['default'].forEach(this.plugins, function (value, key) {
-      log.info('class: ' + Plugify.name, 'plugins: type - ' + key + ' typeof - ' + typeof value);
+    this.defaults = {};
+    // Initialize the plugins
+    this.plugins = (function () {
+      if (_lodash2['default'].isEmpty(defaults)) {
+        _lodash2['default'].forEach(['api', 'backend', 'parser', 'header', 'localize', 'router'], function (item) {
+          _this.defaults[_this.normalize(item)] = function () {};
+        });
+        return _this.defaults;
+      }
+      _lodash2['default'].forOwn(defaults, function (value, key) {
+        if (_lodash2['default'].isFunction(value) && _lodash2['default'].isPlainObject(value())) _this.defaults[key] = value();
+      });
+      return _this.defaults;
+    })();
+    this.register(plugins);
+    _lodash2['default'].forOwn(this.plugins, function (value, key) {
+      var name = value['package'] ? value['package'].name : '';
+      log.info('class: ' + Plugify.name, 'plugins: name - ' + name + ', type - ' + key + ', typeof - ' + typeof value);
     });
-
     _lodash2['default'].defaultsDeep(options, this.options);
   }
 
   /**
    * Returns the plugins after creating an instance
    * of Plugify
-   * @param  {Object | Function} plugins  [description]
+   * @param  {Object | Function | Array} plugins  The user plugins or plugins to override the default
    * @param  {Object} options  The options to apply to the plugins
    * @param  {Object} defaults The default plugins
    * @return {Plugify}         An instance of Plugify
    */
 
-  /**
-   * Sets the attributes in the plugin
-   * @param {Object} plugin  The plugin to set its attributes.
-   * @param {Object} options The options to apply
-   */
-
   _createClass(Plugify, [{
-    key: 'setAttributes',
-    value: function setAttributes(plugin) {
-      log.debug('class: ' + Plugify.name, 'process: setAttributes');
+    key: 'register',
+    value: function register(plugins) {
+      var _this2 = this;
+
+      log.debug('class: ' + Plugify.name, 'process: register');
+      var process = function process(plugin) {
+        if (_lodash2['default'].isPlainObject(plugin)) {
+          if (!_lodash2['default'].has(plugin, 'main') && (function () {
+            return _lodash2['default'].forEach(Object.keys(plugin), function (key) {
+              return key === 'api' || key === 'parser' || key === 'backend' || key === 'header' || key === 'localize' || key === 'router';
+            });
+          })()) {
+            if (_lodash2['default'].forOwn(plugin, function (value) {
+              return _this2.assert((function () {
+                return _lodash2['default'].isFunction(value) ? value() : _lodash2['default'].isPlainObject(value) ? value : undefined;
+              })());
+            })) _lodash2['default'].forOwn(plugin, function (value) {
+              value = _lodash2['default'].isFunction(value) ? value() : _lodash2['default'].isPlainObject(value) ? value : undefined;
+              _this2.setPlugin(value);
+            });
+          } else {
+            if (_this2.assert(plugin)) {
+              _this2.setPlugin(plugin);
+            }
+          }
+        }
+      };
+      if (_lodash2['default'].isArray(plugins)) {
+        _lodash2['default'].forEach(plugins, function (plugin) {
+          plugin = _lodash2['default'].isFunction(plugin) ? plugin() : _lodash2['default'].isPlainObject(plugin) ? plugin : undefined;
+          process(plugin);
+        });
+      } else if (_lodash2['default'].isFunction(plugins)) {
+        process(plugins());
+      } else if (_lodash2['default'].isPlainObject(plugins)) process(plugins);
+    }
+
+    /**
+     * Sets the attributes in the plugin
+     * @param {Object} plugin  The plugin to set its attributes.
+     * @param {Object} options The options to apply
+     */
+  }, {
+    key: 'setPlugin',
+    value: function setPlugin(plugin) {
+      log.debug('class: ' + Plugify.name, 'process: setPlugin');
       var main = plugin.main;
       var defaults = plugin.defaults;
-      var _plugin$package = plugin['package'];
-      var name = _plugin$package.name;
-      var type = _plugin$package.type;
+      var type = plugin['package'].type;
 
       type = this.normalize(type);
+      if (this.plugins[type]) this.plugins[type] = {};
       // Set the plugin fn
-      this.plugins[type][name] = main;
+      this.plugins[type] = main;
       // Set the package
-      this.plugins[type][name]['package'] = plugin['package'];
-      // Insert plugins as callbacks
-      this.plugins[type].push(main);
+      this.plugins[type]['package'] = plugin['package'];
       // Set the default options
       if (!this.options[type]) this.options[type] = defaults;
     }
@@ -91,60 +147,7 @@ var Plugify = (function () {
   }, {
     key: 'normalize',
     value: function normalize(str) {
-      log.debug('class: ' + Plugify.name, 'process: normalize');
       return str.toLowerCase().replace('-', '');
-    }
-
-    /**
-     * Initializes the plugin's stack
-     * @return {Object} The plugin statck
-     * @private
-     */
-  }, {
-    key: 'init',
-    value: function init() {
-      log.debug('class: ' + Plugify.name, 'process: init');
-      return _lodash2['default'].assign({}, {
-        parser: [],
-        router: [],
-        backend: [],
-        api: [],
-        header: [],
-        localize: []
-      });
-    }
-
-    /**
-     * Asserts that the plugins follows the definition and
-     * creates an array of plugin(s)
-     * @param {Object | Array| Function} plugins - The plugins to assert.
-     * @return {Array} An array of plugins
-     */
-  }, {
-    key: 'plugs',
-    value: function plugs(plugins) {
-      log.debug('class: ' + Plugify.name, 'process: plugs');
-      var plugs = [];
-      // 'plugins' is a plain object
-      if (_lodash2['default'].isPlainObject(plugins)) {
-        // A single ship exists
-        if (_lodash2['default'].has(plugins, 'main')) plugs.push(plugins);else _lodash2['default'].forOwn(plugins, function (ship) {
-          try {
-            // Assert that ship is a function
-            if (!_lodash2['default'].isFunction(ship)) throw new Error('Uh oh! The ship must be a function!');
-            if (!_lodash2['default'].isPlainObject(ship())) throw new Error('Whoops! Did the ship forget to return a plain object?');
-          } catch (error) {
-            log.error('class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
-          }
-          plugs.push(ship());
-        });
-      }
-      if (_lodash2['default'].isArray(plugins)) plugs = plugins;
-      if (_lodash2['default'].isFunction(plugins)) {
-        if (!_lodash2['default'].isPlainObject(plugins())) throw new Error('Whoops! Did the ship forget to return a plain object?');
-        plugs.push(plugins());
-      }
-      return plugs;
     }
 
     /**
@@ -157,96 +160,26 @@ var Plugify = (function () {
     value: function assert(plugin) {
       log.debug('class: ' + Plugify.name, 'process: assert');
       try {
-        if (_lodash2['default'].has(plugin, 'main')) throw new Error('Whoops! Did you forget the main function?');
-        if (_lodash2['default'].has(plugin, 'package')) throw new Error('Whoops! Did you forget the package?');
-        if (_lodash2['default'].has(plugin['package'], 'type')) throw new Error('Whoops! Did you forget the "type" of plugin?');
-        if (_lodash2['default'].has(plugin['package'], 'name')) throw new Error('Whoops! Did you forget the "name" of plugin?');
-        if (!_lodash2['default'].has(plugin['package'], 'defaults')) throw new Error('Whoops! Did you forget to add "defaults"?');
-        if (_lodash2['default'].has(plugin, 'defaults')) throw new Error('Whoops! Did you forget to add the "defaults"?');
+        if (!plugin) throw new Error('Whoops! Did you forget to ship your plugin?');
+        if (!_lodash2['default'].has(plugin, 'main')) throw new Error('Whoops! Did you forget the main function?');
+        if (!_lodash2['default'].has(plugin, 'package')) throw new Error('Whoops! Did you forget the package?');
+        if (!_lodash2['default'].has(plugin['package'], 'type')) throw new Error('Whoops! Did you forget the "type" of plugin?');
+        if (!_lodash2['default'].has(plugin['package'], 'name')) throw new Error('Whoops! Did you forget the "name" of plugin?');
+        if (!_lodash2['default'].has(plugin, 'defaults')) throw new Error('Whoops! Did you forget to add the "defaults"?');
       } catch (error) {
-        log.error('class: ' + Plugify.name, 'error: ' + (error.stack || error.toString()));
+        log.error('class: ' + Plugify.name, error.stack || error.toString());
+        return false;
       }
-    }
-
-    /**
-     * Registers the plugin
-     * @param  {Object} plugins  The plugin to register
-     * @param  {Object} options  The options to apply
-     * @param  {Object} defaults The default plugins
-     */
-  }, {
-    key: 'register',
-    value: function register(plugins, defaults) {
-      var plugs = this.plugs(plugins);
-      // Register and then restrict the
-      // plugins to one plugin per type
-      // and add defaults if none exist
-      _lodash2['default'].forEach(plugs, function (plugin) {
-        // Assert
-        if (!_lodash2['default'].isEmpty(defaults)) this.assert(plugin);else log.warn('class: ' + Plugify.name, 'process: register').warn('Defaults is empty! Possibly in testing mode?');
-        var type = this.normalize(plugin['package'].type);
-        // If the default plugin already exists
-        // then remove the default and replace it with
-        // the user defined plugin
-        if (this.plugins[type].length === 1) {
-          if (defaults && defaults[type]) this.plugins[type].pop();
-          // Set the plugin attributes
-          this.setAttributes(plugin);
-          // If there are multiple plugins of the same type
-          // restrict it to one plugin
-        } else if (this.plugins[type].length > 1) {
-            var length = this.plugins[type].length - 1;
-            while (length !== 0) {
-              if (defaults && defaults[type]) this.plugins[type].pop();
-              length--;
-            }
-            // Since no there are no default plugins,
-            // just add the plugin to the stack
-          } else {
-              this.setAttributes(plugin);
-            }
-      }, this);
-    }
-
-    /**
-     * Bundles the plugins and transforms the plugin
-     * stack from an array to an object. It also makes sure
-     * that the stack has a fn placeholder to prevent an undefined
-     * object from being used as a function
-     * @private
-     */
-  }, {
-    key: 'bundle',
-    value: function bundle() {
-      var _this = this;
-
-      // Remove the plugin from array
-      // and set it as the root
-      // e.g. this.plugins.backend => array
-      // becomes this.plugins.backend => object
-      var plugs = this.plugins;
-      _lodash2['default'].forEach(plugs, function (plugin, type) {
-        if (plugin[0]) {
-          // Get the index of the type from the types stack
-          var index = _this.types.indexOf(_this.normalize(type));
-          // Remove the type from the stack since it is registered
-          if (index > -1) _this.types.splice(index, 1);
-          // Register the plugin
-          _this.plugins[_this.normalize(type)] = plugin[0];
-        }
-      });
-      // Set the placeholder
-      _lodash2['default'].forEach(this.types, function (type) {
-        _this.plugins[_this.normalize(type)] = function () {};
-      });
+      return true;
     }
   }]);
 
   return Plugify;
 })();
 
-function plugify(plugins) {
+function plugify() {
   'use strict';
+  var plugins = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
   var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
   var defaults = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
   return new Plugify(plugins, options, defaults).plugins;
