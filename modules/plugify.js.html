@@ -28,11 +28,9 @@
                 <ul class="nav nav-stacked">
                   <li><a href="#Plugify"><i class="alert alert-success"></i><span>Plugify</span></a>
                   </li>
-                  <li><a href="#setAttributes"><i class="alert alert-info"></i><span>setAttributes</span></a>
-                  </li>
-                  <li><a href="#plugs"><i class="alert alert-info"></i><span>plugs</span></a>
-                  </li>
                   <li><a href="#register"><i class="alert alert-info"></i><span>register</span></a>
+                  </li>
+                  <li><a href="#setPlugin"><i class="alert alert-info"></i><span>setPlugin</span></a>
                   </li>
                   <li><a href="#plugify"><i class="alert alert-info"></i><span>plugify</span></a>
                   </li>
@@ -52,27 +50,96 @@
           <pre><code class="language-javascript">class Plugify {
   constructor(plugins, options, defaults) {
       log.debug(`class: ${Plugify.name}`, `process: constructor`);
-      // Type stack to keep track which type has been plugged in
-      this.types = ['api', 'backend', 'parser', 'header', 'localize', 'router'];
       // Local options
       this.options = {};
-      // Initialize the plugin
-      this.plugins = this.init();
-      this.register(plugins, options, defaults);
-      this.bundle();
-      _.forEach(this.plugins, (value, key) =&gt; {
+      this.defaults = {};
+      // Initialize the plugins
+      this.plugins = (() =&gt; {
+        if (_.isEmpty(defaults)) {
+          _.forEach(['api', 'backend', 'parser', 'header', 'localize', 'router'], item =&gt; {
+            this.defaults[this.normalize(item)] = () =&gt; {};
+          });
+          return this.defaults;
+        }
+        _.forOwn(defaults, (value, key) =&gt; {
+          if (_.isFunction(value) &amp;&amp; _.isPlainObject(value()))
+            this.defaults[key] = value();
+        });
+        return this.defaults;
+      })();
+      this.register(plugins);
+      _.forOwn(this.plugins, (value, key) =&gt; {
+        var name = value.package ? value.package.name : '';
         log.info(
           `class: ${Plugify.name}`,
-          `plugins: type - ${key} typeof - ${typeof value}`);
+          `plugins: name - ${name}, type - ${key}, typeof - ${typeof value}`);
       });
-
       _.defaultsDeep(options, this.options);
     }</code></pre>
-          <section id="setAttributes">
-            <h1>setAttributes</h1>
+          <section id="register">
+            <h1>register</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Plugify.prototype.setAttributes()</span><span>&nbsp;</span>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Plugify.prototype.register()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>The</td>
+                <td>Function, Array, Object</td>
+                <td><p>plugin to register</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Registers the plugin</p></div>
+          <pre><code class="language-javascript">register(plugins) {
+    log.debug(`class: ${Plugify.name}`, `process: register`);
+    var process = (plugin) =&gt; {
+      if (_.isPlainObject(plugin)) {
+        if (!_.has(plugin, 'main') &amp;&amp; (() =&gt; {
+            return _.forEach(Object.keys(plugin), key =&gt;
+              key === 'api' || key === 'parser' || key === 'backend' ||
+              key === 'header' || key === 'localize' || key === 'router');
+          })()) {
+          if (_.forOwn(plugin, value =&gt; this.assert((() =&gt; {
+              return _.isFunction(value) ? value() :
+                _.isPlainObject(value) ? value : undefined;
+            })())))
+            _.forOwn(plugin, value =&gt; {
+              value = _.isFunction(value) ? value() :
+                _.isPlainObject(value) ? value : undefined;
+              this.setPlugin(value);
+            });
+        } else {
+          if (this.assert(plugin)) {
+            this.setPlugin(plugin);
+          }
+        }
+      }
+    };
+    if (_.isArray(plugins)) {
+      _.forEach(plugins, plugin =&gt; {
+        plugin = _.isFunction(plugin) ? plugin() :
+          _.isPlainObject(plugin) ? plugin : undefined;
+        process(plugin);
+      });
+    } else if (_.isFunction(plugins)) {
+      process(plugins());
+    } else if (_.isPlainObject(plugins)) process(plugins);
+  }</code></pre>
+          <section id="setPlugin">
+            <h1>setPlugin</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Plugify.prototype.setPlugin()</span><span>&nbsp;</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -96,153 +163,24 @@
               </tr>
             </tbody>
           </table>
-          <div class="description"><p>Sets the attributes in the plugin</p></div>
-          <pre><code class="language-javascript">setAttributes(plugin) {
-    log.debug(`class: ${Plugify.name}`, `process: setAttributes`);
+          <div class="description"><p>Sets the attributes of the plugin</p></div>
+          <pre><code class="language-javascript">setPlugin(plugin) {
+    log.debug(`class: ${Plugify.name}`, `process: setPlugin`);
     var {
       main, defaults
     } = plugin;
     var {
-      name, type
+      type
     } = plugin.package;
     type = this.normalize(type);
+    if (this.plugins[type]) this.plugins[type] = {};
     // Set the plugin fn
-    this.plugins[type][name] = main;
+    this.plugins[type] = main;
     // Set the package
-    this.plugins[type][name].package = plugin.package;
-    // Insert plugins as callbacks
-    this.plugins[type].push(main);
+    this.plugins[type].package = plugin.package;
     // Set the default options
     if (!this.options[type])
       this.options[type] = defaults;
-  }</code></pre>
-          <section id="plugs">
-            <h1>plugs</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Plugify.prototype.plugs()</span><span>&nbsp;</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>plugins</td>
-                <td>Object, Array, Function</td>
-                <td><ul>
-<li>The plugins to assert.</li>
-</ul>
-</td>
-              </tr>
-              <tr>
-                <td>return</td>
-                <td>Array</td>
-                <td><p>An array of plugins</p></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Asserts that the plugins follows the definition and<br />creates an array of plugin(s)</p></div>
-          <pre><code class="language-javascript">plugs(plugins) {
-    log.debug(`class: ${Plugify.name}`, `process: plugs`);
-    var plugs = [];
-    // 'plugins' is a plain object
-    if (_.isPlainObject(plugins)) {
-      // A single ship exists
-      if (_.has(plugins, 'main')) plugs.push(plugins);
-      else _.forOwn(plugins, (ship) =&gt; {
-        try {
-          // Assert that ship is a function
-          if (!_.isFunction(ship)) throw new Error('Uh oh! The ship must be a function!');
-          if (!_.isPlainObject(ship())) throw new Error('Whoops! Did the ship forget to return a plain object?');
-        } catch (error) {
-          log.error(`class: ${Plugify.name}`,
-            `error: ${error.stack || error.toString() }`);
-        }
-        plugs.push(ship());
-      });
-    }
-    if (_.isArray(plugins)) plugs = plugins;
-    if (_.isFunction(plugins)) {
-      if (!_.isPlainObject(plugins())) throw new Error('Whoops! Did the ship forget to return a plain object?');
-      plugs.push(plugins());
-    }
-    return plugs;
-  }</code></pre>
-          <section id="register">
-            <h1>register</h1>
-            <h5 class="subheader"></h5>
-            <p>
-              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Plugify.prototype.register()</span><span>&nbsp;</span>
-            </p>
-          </section>
-          <table class="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th style="width:20%">Option name</th>
-                <th style="width:20%">Type</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>plugins</td>
-                <td>Object</td>
-                <td><p>The plugin to register</p></td>
-              </tr>
-              <tr>
-                <td>options</td>
-                <td>Object</td>
-                <td><p>The options to apply</p></td>
-              </tr>
-              <tr>
-                <td>defaults</td>
-                <td>Object</td>
-                <td><p>The default plugins</p></td>
-              </tr>
-            </tbody>
-          </table>
-          <div class="description"><p>Registers the plugin</p></div>
-          <pre><code class="language-javascript">register(plugins, defaults) {
-    var plugs = this.plugs(plugins);
-    // Register and then restrict the
-    // plugins to one plugin per type
-    // and add defaults if none exist
-    _.forEach(plugs, function(plugin) {
-      // Assert
-      if (!_.isEmpty(defaults)) this.assert(plugin);
-      else log
-        .warn(`class: ${Plugify.name}`, `process: register`)
-        .warn('Defaults is empty! Possibly in testing mode?');
-      var type = this.normalize(plugin.package.type);
-      // If the default plugin already exists
-      // then remove the default and replace it with
-      // the user defined plugin
-      if (this.plugins[type].length === 1) {
-        if (defaults &amp;&amp; defaults[type])
-          this.plugins[type].pop();
-        // Set the plugin attributes
-        this.setAttributes(plugin);
-        // If there are multiple plugins of the same type
-        // restrict it to one plugin
-      } else if (this.plugins[type].length &gt; 1) {
-        var length = this.plugins[type].length - 1;
-        while (length !== 0) {
-          if (defaults &amp;&amp; defaults[type])
-            this.plugins[type].pop();
-          length--;
-        }
-        // Since no there are no default plugins,
-        // just add the plugin to the stack
-      } else {
-        this.setAttributes(plugin);
-      }
-    }, this);
   }</code></pre>
           <section id="plugify">
             <h1>plugify</h1>
@@ -262,8 +200,8 @@
             <tbody>
               <tr>
                 <td>plugins</td>
-                <td>Object, Function</td>
-                <td><p>[description]</p></td>
+                <td>Object, Function, Array</td>
+                <td><p>The user plugins or plugins to override the default</p></td>
               </tr>
               <tr>
                 <td>options</td>
@@ -283,7 +221,7 @@
             </tbody>
           </table>
           <div class="description"><p>Returns the plugins after creating an instance<br />of Plugify</p></div>
-          <pre><code class="language-javascript">function plugify(plugins, options = {}, defaults = {}) {
+          <pre><code class="language-javascript">function plugify(plugins = {}, options = {}, defaults = {}) {
   'use strict';
   return new Plugify(plugins, options, defaults).plugins;
 }</code></pre>
