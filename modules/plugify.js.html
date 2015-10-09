@@ -30,6 +30,8 @@
                   </li>
                   <li><a href="#register"><i class="alert alert-info"></i><span>register</span></a>
                   </li>
+                  <li><a href="#unPack"><i class="alert alert-info"></i><span>unPack</span></a>
+                  </li>
                   <li><a href="#setPlugin"><i class="alert alert-info"></i><span>setPlugin</span></a>
                   </li>
                   <li><a href="#plugify"><i class="alert alert-info"></i><span>plugify</span></a>
@@ -55,25 +57,28 @@
       this.defaults = {};
       // Initialize the plugins
       this.plugins = (() =&gt; {
+        // Check if defaults is empty
         if (_.isEmpty(defaults)) {
+          // Fill the defaults with placeholders (functions that don't do anything)
           _.forEach(['api', 'backend', 'parser', 'header', 'localize', 'router'], item =&gt; {
-            this.defaults[this.normalize(item)] = () =&gt; {};
+            this.defaults[Plugify.normalize(item)] = () =&gt; {};
           });
-          return this.defaults;
-        }
-        _.forOwn(defaults, (value, key) =&gt; {
-          if (_.isFunction(value) &amp;&amp; _.isPlainObject(value()))
-            this.defaults[key] = value();
+        } else Plugify.unPack(defaults, (key, plugin) =&gt; {
+          // Unpack the gengo-pack and generate the default plugins
+          Plugify.setPlugin(this.defaults, plugin, this.options);
         });
         return this.defaults;
       })();
+      // Register the plugins
       this.register(plugins);
+      // Debug
       _.forOwn(this.plugins, (value, key) =&gt; {
         var name = value.package ? value.package.name : '';
         log.info(
           `class: ${Plugify.name}`,
           `plugins: name - ${name}, type - ${key}, typeof - ${typeof value}`);
       });
+      // Create the default options
       _.defaultsDeep(options, this.options);
     }</code></pre>
           <section id="register">
@@ -101,45 +106,43 @@
           </table>
           <div class="description"><p>Registers the plugin</p></div>
           <pre><code class="language-javascript">register(plugins) {
-    log.debug(`class: ${Plugify.name}`, `process: register`);
-    var process = (plugin) =&gt; {
-      if (_.isPlainObject(plugin)) {
-        if (!_.has(plugin, 'main') &amp;&amp; (() =&gt; {
-            return _.forEach(Object.keys(plugin), key =&gt;
-              key === 'api' || key === 'parser' || key === 'backend' ||
-              key === 'header' || key === 'localize' || key === 'router');
-          })()) {
-          if (_.forOwn(plugin, value =&gt; this.assert((() =&gt; {
-              return _.isFunction(value) ? value() :
-                _.isPlainObject(value) ? value : undefined;
-            })())))
-            _.forOwn(plugin, value =&gt; {
-              value = _.isFunction(value) ? value() :
-                _.isPlainObject(value) ? value : undefined;
-              this.setPlugin(value);
-            });
-        } else {
-          if (this.assert(plugin)) {
-            this.setPlugin(plugin);
+  log.debug(`class: ${Plugify.name}`, `process: register`);
+  var process = (plugin) =&gt; {
+    if (_.isPlainObject(plugin)) {
+      if (Plugify.isPack(plugin)) {
+        Plugify.unPack(plugin, (key, p) =&gt; {
+          if (Plugify.assert(p)) {
+            Plugify.setPlugin(this.plugins, p, this.options);
           }
-        }
+        });
+      } else
+      if (Plugify.assert(plugin)) {
+        Plugify.setPlugin(this.plugins, plugin, this.options);
       }
-    };
-    if (_.isArray(plugins)) {
-      _.forEach(plugins, plugin =&gt; {
-        plugin = _.isFunction(plugin) ? plugin() :
-          _.isPlainObject(plugin) ? plugin : undefined;
-        process(plugin);
-      });
-    } else if (_.isFunction(plugins)) {
-      process(plugins());
-    } else if (_.isPlainObject(plugins)) process(plugins);
+    }
+  };
+  if (_.isArray(plugins)) {
+    _.forEach(plugins, plugin =&gt; {
+      plugin = _.isFunction(plugin) ? plugin() :
+        _.isPlainObject(plugin) ? plugin : undefined;
+      process(plugin);
+    });
+  } else if (_.isFunction(plugins)) {
+    process(plugins());
+  } else if (_.isPlainObject(plugins)) process(plugins);
+}
+static isPack(plugin) {
+    return !_.has(plugin, 'main') &amp;&amp; (() =&gt; {
+      return _.forEach(Object.keys(plugin), key =&gt;
+        key === 'api' || key === 'parser' || key === 'backend' ||
+        key === 'header' || key === 'localize' || key === 'router');
+    })();
   }</code></pre>
-          <section id="setPlugin">
-            <h1>setPlugin</h1>
+          <section id="unPack">
+            <h1>unPack</h1>
             <h5 class="subheader"></h5>
             <p>
-              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Plugify.prototype.setPlugin()</span><span>&nbsp;</span>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Plugify.unPack()</span><span>&nbsp;</span>
             </p>
           </section>
           <table class="table table-bordered table-striped">
@@ -152,9 +155,48 @@
             </thead>
             <tbody>
               <tr>
+                <td>plugins</td>
+                <td>Object, Function</td>
+                <td><p>The plugins to unpack.</p></td>
+              </tr>
+              <tr>
+                <td>callback</td>
+                <td>Function</td>
+                <td><p>The callback function</p></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="description"><p>Unpacks the gengo-pack and returns the plugin<br />through a callback</p></div>
+          <pre><code class="language-javascript">static unPack(plugins, callback) {
+    _.forOwn(plugins, (plugin, type) =&gt; {
+      callback(type, _.isFunction(plugin) ? plugin() : plugin);
+    });
+  }</code></pre>
+          <section id="setPlugin">
+            <h1>setPlugin</h1>
+            <h5 class="subheader"></h5>
+            <p>
+              <div class="label label-info radius ctx-type">method</div><span>&nbsp;</span><span>Plugify.setPlugin()</span><span>&nbsp;</span>
+            </p>
+          </section>
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th style="width:20%">Option name</th>
+                <th style="width:20%">Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>object</td>
+                <td>Object</td>
+                <td><p>The object to set its attributes.</p></td>
+              </tr>
+              <tr>
                 <td>plugin</td>
                 <td>Object</td>
-                <td><p>The plugin to set its attributes.</p></td>
+                <td><p>The plugin to apply to the object</p></td>
               </tr>
               <tr>
                 <td>options</td>
@@ -164,7 +206,7 @@
             </tbody>
           </table>
           <div class="description"><p>Sets the attributes of the plugin</p></div>
-          <pre><code class="language-javascript">setPlugin(plugin) {
+          <pre><code class="language-javascript">static setPlugin(object, plugin, options) {
     log.debug(`class: ${Plugify.name}`, `process: setPlugin`);
     var {
       main, defaults
@@ -172,15 +214,15 @@
     var {
       type
     } = plugin.package;
-    type = this.normalize(type);
-    if (this.plugins[type]) this.plugins[type] = {};
+    type = Plugify.normalize(type);
+    if (object[type]) object[type] = {};
     // Set the plugin fn
-    this.plugins[type] = main;
+    object[type] = main;
     // Set the package
-    this.plugins[type].package = plugin.package;
+    object[type].package = plugin.package;
     // Set the default options
-    if (!this.options[type])
-      this.options[type] = defaults;
+    if (!options[type])
+      options[type] = defaults;
   }</code></pre>
           <section id="plugify">
             <h1>plugify</h1>
