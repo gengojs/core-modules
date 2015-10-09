@@ -20,7 +20,26 @@ describe("Plugify", function () {
           }
         };
       })(), {}, plugs());
+      assert.isFunction(plugins.parser);
       assert.equal(plugins.parser.package.name, 'override-parser');
+      assert.isFunction(plugins.router);
+      assert.equal(plugins.router.package.name, 'mocha-router');
+      
+      plugins = plugify({}, {}, plugs());
+      assert.isFunction(plugins.router);
+      assert.equal(plugins.router.package.name, 'mocha-router');
+      
+      plugins = plugify([(function(){
+        return {
+          main:function ship(){},
+          package: { name : 'override-parser', 'type': 'parser' },
+          defaults: {
+            greet:'hello'
+          }
+        };
+      })], {}, plugs());
+      assert.equal(plugins.parser.package.name, 'override-parser');
+      assert.isFunction(plugins.router);
       assert.equal(plugins.router.package.name, 'mocha-router');
     });
   });

@@ -38,22 +38,26 @@ var Plugify = (function () {
     this.defaults = {};
     // Initialize the plugins
     this.plugins = (function () {
+      // Check if defaults is empty
       if (_lodash2['default'].isEmpty(defaults)) {
+        // Fill the defaults with placeholders (functions that don't do anything)
         _lodash2['default'].forEach(['api', 'backend', 'parser', 'header', 'localize', 'router'], function (item) {
-          _this.defaults[_this.normalize(item)] = function () {};
+          _this.defaults[Plugify.normalize(item)] = function () {};
         });
-        return _this.defaults;
-      }
-      _lodash2['default'].forOwn(defaults, function (value, key) {
-        if (_lodash2['default'].isFunction(value) && _lodash2['default'].isPlainObject(value())) _this.defaults[key] = value();
+      } else Plugify.unPack(defaults, function (key, plugin) {
+        // Unpack the gengo-pack and generate the default plugins
+        Plugify.setPlugin(_this.defaults, plugin, _this.options);
       });
       return _this.defaults;
     })();
+    // Register the plugins
     this.register(plugins);
+    // Debug
     _lodash2['default'].forOwn(this.plugins, function (value, key) {
       var name = value['package'] ? value['package'].name : '';
       log.info('class: ' + Plugify.name, 'plugins: name - ' + name + ', type - ' + key + ', typeof - ' + typeof value);
     });
+    // Create the default options
     _lodash2['default'].defaultsDeep(options, this.options);
   }
 
@@ -79,23 +83,14 @@ var Plugify = (function () {
       log.debug('class: ' + Plugify.name, 'process: register');
       var process = function process(plugin) {
         if (_lodash2['default'].isPlainObject(plugin)) {
-          if (!_lodash2['default'].has(plugin, 'main') && (function () {
-            return _lodash2['default'].forEach(Object.keys(plugin), function (key) {
-              return key === 'api' || key === 'parser' || key === 'backend' || key === 'header' || key === 'localize' || key === 'router';
+          if (Plugify.isPack(plugin)) {
+            Plugify.unPack(plugin, function (key, p) {
+              if (Plugify.assert(p)) {
+                Plugify.setPlugin(_this2.plugins, p, _this2.options);
+              }
             });
-          })()) {
-            if (_lodash2['default'].forOwn(plugin, function (value) {
-              return _this2.assert((function () {
-                return _lodash2['default'].isFunction(value) ? value() : _lodash2['default'].isPlainObject(value) ? value : undefined;
-              })());
-            })) _lodash2['default'].forOwn(plugin, function (value) {
-              value = _lodash2['default'].isFunction(value) ? value() : _lodash2['default'].isPlainObject(value) ? value : undefined;
-              _this2.setPlugin(value);
-            });
-          } else {
-            if (_this2.assert(plugin)) {
-              _this2.setPlugin(plugin);
-            }
+          } else if (Plugify.assert(plugin)) {
+            Plugify.setPlugin(_this2.plugins, plugin, _this2.options);
           }
         }
       };
@@ -108,28 +103,52 @@ var Plugify = (function () {
         process(plugins());
       } else if (_lodash2['default'].isPlainObject(plugins)) process(plugins);
     }
+  }], [{
+    key: 'isPack',
+    value: function isPack(plugin) {
+      return !_lodash2['default'].has(plugin, 'main') && (function () {
+        return _lodash2['default'].forEach(Object.keys(plugin), function (key) {
+          return key === 'api' || key === 'parser' || key === 'backend' || key === 'header' || key === 'localize' || key === 'router';
+        });
+      })();
+    }
+
+    /**
+     * Unpacks the gengo-pack and returns the plugin
+     * through a callback
+     * @param {Object | Function} plugins The plugins to unpack.
+     * @param {Function} callback The callback function
+     */
+  }, {
+    key: 'unPack',
+    value: function unPack(plugins, callback) {
+      _lodash2['default'].forOwn(plugins, function (plugin, type) {
+        callback(type, _lodash2['default'].isFunction(plugin) ? plugin() : plugin);
+      });
+    }
 
     /**
      * Sets the attributes of the plugin
-     * @param {Object} plugin  The plugin to set its attributes.
+     * @param {Object} object  The object to set its attributes.
+     * @param {Object} plugin  The plugin to apply to the object
      * @param {Object} options The options to apply
      */
   }, {
     key: 'setPlugin',
-    value: function setPlugin(plugin) {
+    value: function setPlugin(object, plugin, options) {
       log.debug('class: ' + Plugify.name, 'process: setPlugin');
       var main = plugin.main;
       var defaults = plugin.defaults;
       var type = plugin['package'].type;
 
-      type = this.normalize(type);
-      if (this.plugins[type]) this.plugins[type] = {};
+      type = Plugify.normalize(type);
+      if (object[type]) object[type] = {};
       // Set the plugin fn
-      this.plugins[type] = main;
+      object[type] = main;
       // Set the package
-      this.plugins[type]['package'] = plugin['package'];
+      object[type]['package'] = plugin['package'];
       // Set the default options
-      if (!this.options[type]) this.options[type] = defaults;
+      if (!options[type]) options[type] = defaults;
     }
 
     /**
