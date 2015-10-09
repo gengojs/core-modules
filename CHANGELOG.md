@@ -1,3 +1,10 @@
+2.1.2 / 2015-10-09
+==================
+
+  * Release v2.1.2.
+  * Fix
+    Fixed the plugins issue again.
+
 2.1.1 / 2015-10-08
 ==================
 
@@ -145,13 +152,3 @@
   * Update
     Added travis.
     Updated README.
-
-1.0.0 / 2015-08-29
-==================
-
-  * Update
-    Updated package.
-  * Update
-    Added files.
-    Added tests.
-  * Initial commit
