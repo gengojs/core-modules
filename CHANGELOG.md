@@ -1,3 +1,12 @@
+2.0.9 / 2015-10-08
+==================
+
+  * Release v2.0.9.
+  * Fix
+    Fixed issue where plugins not overriding correctly.
+    Added tests.
+    Updated change log.
+
 2.0.8 / 2015-10-05
 ==================
 
