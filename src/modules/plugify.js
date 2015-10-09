@@ -27,17 +27,6 @@ var log = (0, _gengojsDebug2['default'])('core');
  */
 
 var Plugify = (function () {
-  /**
-   * plugins - The user's plugins ( [], function, {} )
-   * options - The user's options ( {} )
-   * defaults - The gengojs-default-pack ( { //...// }, {} )
-   * 
-   * Psuedo code:
-   * case 1: 'plugins' may be an array of random plugins.
-   *  -> assert that each plugin are properly shipped
-   *  -> 
-   */
-
   function Plugify(plugins, options, defaults) {
     var _this = this;
 
@@ -75,6 +64,11 @@ var Plugify = (function () {
    * @param  {Object} options  The options to apply to the plugins
    * @param  {Object} defaults The default plugins
    * @return {Plugify}         An instance of Plugify
+   */
+
+  /**
+   * Registers the plugin
+   * @param {Function | Array | Object} The plugin to register
    */
 
   _createClass(Plugify, [{
@@ -116,7 +110,7 @@ var Plugify = (function () {
     }
 
     /**
-     * Sets the attributes in the plugin
+     * Sets the attributes of the plugin
      * @param {Object} plugin  The plugin to set its attributes.
      * @param {Object} options The options to apply
      */

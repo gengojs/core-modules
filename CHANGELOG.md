@@ -1,3 +1,13 @@
+2.1.0 / 2015-10-08
+==================
+
+  * Release v2.1.0.
+  * Minor Update
+    Simplified plugify.
+    Updated tests.
+  * Update
+    Updated change log.
+
 2.0.9 / 2015-10-08
 ==================
 
