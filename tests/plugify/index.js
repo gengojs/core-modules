@@ -18,8 +18,20 @@ describe("Plugify", function () {
         header: [],
         localize: []
       });
+      plugins = plugify((function(){
+        return {
+          main:function(){},
+          package: { name : 'override-parser', 'type': 'parser' },
+          defaults: {
+            greet:'hello'
+          }
+        };
+      })(), {}, plugs());
+      assert.equal(plugins.parser.package.name, 'override-parser');
     });
   });
+  
+  
   describe("options", function () {
     var options = {
       parser: {

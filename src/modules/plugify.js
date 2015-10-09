@@ -42,6 +42,7 @@ var Plugify = (function () {
     _lodash2['default'].forEach(this.plugins, function (value, key) {
       log.info('class: ' + Plugify.name, 'plugins: type - ' + key + ' typeof - ' + typeof value);
     });
+
     _lodash2['default'].defaultsDeep(options, this.options);
   }
 
@@ -188,7 +189,7 @@ var Plugify = (function () {
         // then remove the default and replace it with
         // the user defined plugin
         if (this.plugins[type].length === 1) {
-          if (!_lodash2['default'].isUndefined(defaults)) this.plugins[type].pop();
+          if (defaults && defaults[type]) this.plugins[type].pop();
           // Set the plugin attributes
           this.setAttributes(plugin);
           // If there are multiple plugins of the same type
@@ -196,7 +197,7 @@ var Plugify = (function () {
         } else if (this.plugins[type].length > 1) {
             var length = this.plugins[type].length - 1;
             while (length !== 0) {
-              if (!_lodash2['default'].isUndefined(defaults)) this.plugins[type].pop();
+              if (defaults && defaults[type]) this.plugins[type].pop();
               length--;
             }
             // Since no there are no default plugins,
