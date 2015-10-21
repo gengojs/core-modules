@@ -28,6 +28,10 @@ var _gengojsDebug = require('gengojs-debug');
 
 var _gengojsDebug2 = _interopRequireDefault(_gengojsDebug);
 
+var _toml = require('toml');
+
+var _toml2 = _interopRequireDefault(_toml);
+
 var log = (0, _gengojsDebug2['default'])('core');
 /*
     ## Options
@@ -69,8 +73,12 @@ var Optify = function Optify(options) {
         // Load yaml
         settings = _jsYaml2['default'].safeLoad(_fs2['default'].readFileSync(options, 'utf8'));
         this.options = settings;
+      } else if (/\.toml/.test(options)) {
+        // Load toml
+        settings = _toml2['default'].parse(_fs2['default'].readFileSync(options, 'utf8'));
+        this.options = settings;
       } else {
-        throw new Error('Oops! Did you forgt to add the extension? \n' + 'The supported extensions are .json, .js, and .yaml.');
+        throw new Error('Oops! Did you forget to add the extension? \n' + 'The supported extensions are .json, .js, .toml, and .yaml.');
       }
     } else this.options = settings || {};
   } catch (error) {

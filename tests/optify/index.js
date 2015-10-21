@@ -19,7 +19,7 @@ describe("Optify", function() {
    });
    
    describe("JSON", function() {
-        var options = optify(path.join(fixtures, 'options.js'));
+        var options = optify(path.join(fixtures, 'options.json'));
        it("should return the test options from path", function(){
            assert.isObject(options);
            assert.deepEqual(options, {greet:true});
@@ -27,7 +27,15 @@ describe("Optify", function() {
    });
    
    describe("YAML", function() {
-        var options = optify(path.join(fixtures, 'options.js'));
+        var options = optify(path.join(fixtures, 'options.yaml'));
+       it("should return the test options from path", function(){
+           assert.isObject(options);
+           assert.deepEqual(options, {greet:true});
+       });
+   });
+   
+   describe("TOML", function() {
+        var options = optify(path.join(fixtures, 'options.toml'));
        it("should return the test options from path", function(){
            assert.isObject(options);
            assert.deepEqual(options, {greet:true});

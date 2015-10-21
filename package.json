@@ -47,6 +47,7 @@
   "dependencies": {
     "gengojs-debug": "^2.0.4",
     "js-yaml": "^3.4.0",
-    "lodash": "^3.10.1"
+    "lodash": "^3.10.1",
+    "toml": "^2.3.0"
   }
 }
