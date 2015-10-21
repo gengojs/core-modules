@@ -69,10 +69,14 @@
           // Load yaml
           settings = yaml.safeLoad(fs.readFileSync(options, 'utf8'));
           this.options = settings;
+        } else if (/\.toml/.test(options)) {
+          // Load toml
+          settings = toml.parse(fs.readFileSync(options, 'utf8'));
+          this.options = settings;
         } else {
           throw new Error
-            ('Oops! Did you forgt to add the extension? \n' +
-              'The supported extensions are .json, .js, and .yaml.');
+            ('Oops! Did you forget to add the extension? \n' +
+              'The supported extensions are .json, .js, .toml, and .yaml.');
         }
       } else this.options = settings || {};
     } catch (error) {
